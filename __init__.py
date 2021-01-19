@@ -45,7 +45,10 @@ bl_info = {
 
 sub_modules_names = (
     "QuickPref",
-    "Pie_Workspaces"
+    "Pie_Workspaces",
+    "Pie_Snap",
+    
+    
     )
 
 
@@ -75,9 +78,9 @@ def get_addon_preferences(name=''):
                     cls = _get_pref_class(mod)
                     if cls:
                         prop = PointerProperty(type=cls)
-                        create_property(PIEToolsPreferences, name, prop)
-                        bpy.utils.unregister_class(PIEToolsPreferences)
-                        bpy.utils.register_class(PIEToolsPreferences)
+                        create_property(UIToolsPreferences, name, prop)
+                        bpy.utils.unregister_class(UIToolsPreferences)
+                        bpy.utils.register_class(UIToolsPreferences)
         return getattr(addon_prefs, name, None)
     else:
         return addon_prefs
@@ -100,16 +103,16 @@ def unregister_submodule(mod):
 
         prefs = get_addon_preferences()
         name = mod.__name__.split('.')[-1]
-        if hasattr(PIEToolsPreferences, name):
-            delattr(PIEToolsPreferences, name)
+        if hasattr(UIToolsPreferences, name):
+            delattr(UIToolsPreferences, name)
             if prefs:
-                bpy.utils.unregister_class(PIEToolsPreferences)
-                bpy.utils.register_class(PIEToolsPreferences)
+                bpy.utils.unregister_class(UIToolsPreferences)
+                bpy.utils.register_class(UIToolsPreferences)
                 if name in prefs:
                     del prefs[name]
 
 
-class PIEToolsPreferences(AddonPreferences):
+class UIToolsPreferences(AddonPreferences):
     bl_idname = __name__
 
     def draw(self, context):
@@ -209,7 +212,7 @@ for mod in sub_modules:
         return update
 
     create_property(
-        PIEToolsPreferences,
+        UIToolsPreferences,
         'use_' + mod_name,
         BoolProperty(
             name=info['name'],
@@ -219,13 +222,13 @@ for mod in sub_modules:
         ))
 
     create_property(
-        PIEToolsPreferences,
+        UIToolsPreferences,
         'show_expanded_' + mod_name,
         BoolProperty())
 
 
 classes = (
-    PIEToolsPreferences,
+    UIToolsPreferences,
 )
 
 
@@ -253,3 +256,6 @@ def unregister():
 
 if __name__ == "__main__":
     register()
+
+
+

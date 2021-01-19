@@ -20,7 +20,7 @@
 
 bl_info = {
     "name": "Pie_Workspaces",
-    "description": "Workspace Pie Menu",
+    "description": "Workspace Pie Menu (keymap: W)",
     "author": "Morphin",
     "version": (0, 0, 1),
     "blender": (2, 90, 0),
@@ -37,7 +37,7 @@ from bpy.types import Menu
 # Pie Workspaces - W
 class PIE_MT_Workspaces(Menu):
     bl_idname = "PIE_MT_workspaces"
-    bl_label = "Pie Workspaces"
+    bl_label = "Workspaces"
 
     def draw(self, context):
         layout = self.layout
@@ -136,7 +136,6 @@ def register():
 
     wm = bpy.context.window_manager
     if wm.keyconfigs.addon:
-        # Delete
         km = wm.keyconfigs.addon.keymaps.new(name='Window')
         kmi = km.keymap_items.new('wm.call_menu_pie', 'W', 'CLICK_DRAG')
         kmi.properties.name = "PIE_MT_workspaces"
