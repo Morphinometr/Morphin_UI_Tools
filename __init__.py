@@ -18,7 +18,7 @@
 
 # <pep8 compliant>
 
-# Contributed to by meta-androcto, pitiwazou, chromoly, italic
+# Contributed to by meta-androcto, pitiwazou, chromoly, italic, morphin
 
 import bpy
 from bpy.props import (
@@ -34,7 +34,7 @@ from bpy.types import (
 bl_info = {
     "name": "Morphin UI Tools",
     "author": "Morphin",
-    "version": (0, 0, 1),
+    "version": (0, 0, 2),
     "blender": (2, 90, 0),
     "description": "UI",
     "location": "Addons Preferences",
@@ -45,6 +45,7 @@ bl_info = {
 
 sub_modules_names = (
     "QuickPref",
+    "Pie_Workspaces"
     )
 
 
