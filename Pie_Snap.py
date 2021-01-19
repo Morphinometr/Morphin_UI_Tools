@@ -22,10 +22,10 @@ bl_info = {
     "author": "Morphin",
     "blender": (2, 90, 0),
     "version": (0, 0, 1),
-    "location": "3D View, UV Editor",
+    "location": "'S' click-drag",
     "warning": "",
     "doc_url": "",
-    "category": "Interface"
+    "category": "3D View, UV Editor"
     }
 
 import bpy
@@ -39,7 +39,7 @@ from bpy.types import (
 class PIE_MT_3DSnap(Menu):
     bl_idname = "PIE_MT_3DSnap"
     bl_label = "Snap"
-    
+       
     def draw(self, context):
         layout = self.layout
         prefs = context.preferences
@@ -256,12 +256,12 @@ def register():
     wm = bpy.context.window_manager
     if wm.keyconfigs.addon:
         km = wm.keyconfigs.addon.keymaps.new(name='3D View', space_type='VIEW_3D')
-        kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'PRESS', shift = True, ctrl = True)
+        kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'CLICK_DRAG')
         kmi.properties.name = "PIE_MT_3DSnap"
         addon_keymaps.append((km, kmi))
         
         km = wm.keyconfigs.addon.keymaps.new(name='UV Editor')
-        kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'PRESS', shift = True, ctrl = True)
+        kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'CLICK_DRAG')
         kmi.properties.name = "PIE_MT_2DSnap"
         addon_keymaps.append((km, kmi))
         

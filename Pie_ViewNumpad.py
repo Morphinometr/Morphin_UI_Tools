@@ -25,7 +25,7 @@ bl_info = {
     "location": "'C' click-drag",
     "warning": "",
     "doc_url": "",
-    "category": "View Numpad Pie"
+    "category": "3D View"
     }
 
 import bpy
@@ -56,13 +56,13 @@ class PIE_MT_ViewNumpad(Menu):
         # 8 - TOP
         pie.operator("view3d.view_axis", text="Top", icon='TRIA_UP').type = 'TOP'
         # 7 - TOP - LEFT
-        pie.operator("view3d.view_axis", text="Back").type = 'BACK'
+        pie.operator("view3d.view_axis", text="Front", icon='EVENT_F').type = 'FRONT'
         # 9 - TOP - RIGHT
-        pie.operator("view3d.view_axis", text="Front").type = 'FRONT'
+        pie.operator("view3d.view_axis", text="Back", icon='EVENT_B').type = 'BACK'
         # 1 - BOTTOM - LEFT
-        pie.operator("view3d.view_persportho", text="Persp/Ortho", icon='VIEW_PERSPECTIVE')
+        pie.operator("view3d.view_camera", text="View Cam", icon='VIEW_CAMERA')
         # 3 - BOTTOM - RIGHT
-        pie.operator("view3d.view_camera", text="View Cam", icon='HIDE_OFF')
+        pie.operator("view3d.view_persportho", text="Persp/Ortho", icon='VIEW_PERSPECTIVE')
 
 
 classes = (

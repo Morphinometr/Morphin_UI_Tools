@@ -20,21 +20,21 @@
 
 bl_info = {
     "name": "Pie_Workspaces",
-    "description": "Workspace Pie Menu (keymap: W)",
+    "description": "Workspace Pie Menu",
     "author": "Morphin",
     "version": (0, 0, 1),
     "blender": (2, 90, 0),
-    "location": "",
+    "location": "'W' click-drag",
     "warning": "",
     "doc_url": "",
-    "category": "Interface"
+    "category": "Window"
     }
 
 import bpy
 from bpy.types import Menu
 
 
-# Pie Workspaces - W
+# Pie Workspaces
 class PIE_MT_Workspaces(Menu):
     bl_idname = "PIE_MT_workspaces"
     bl_label = "Workspaces"
@@ -45,17 +45,19 @@ class PIE_MT_Workspaces(Menu):
         # 4 - LEFT
         pie.operator("class.layout", text="Layout", icon='SCENE_DATA')
         # 6 - RIGHT
-        pie.operator("class.uvediting", text="UV Editing", icon='UV')
+        pie.operator("class.uvediting", text="UV Editing", icon='UV_DATA')
         # 2 - BOTTOM
         pie.operator("class.sculpting", text="Sculpting", icon='SCULPTMODE_HLT')
         # 8 - TOP
-        pie.operator("class.shading", text="Shading", icon='NODE_MATERIAL')
+        pie.operator("class.shading", text="Shading", icon='SHADING_RENDERED')
         # 7 - TOP - LEFT
-        pie.operator("class.animation", text="Animation", icon='NODE_MATERIAL')
+        pie.operator("class.animation", text="Animation", icon='ARMATURE_DATA')
         # 9 - TOP - RIGHT
+        pie.operator("class.txpaint", text="Texture Paint", icon='TPAINT_HLT')
         # 1 - BOTTOM - LEFT
+        pie.operator("screen.workspace_cycle", text="Prev", icon='TRIA_LEFT').direction = 'PREV'
         # 3 - BOTTOM - RIGHT
-        
+        pie.operator("screen.workspace_cycle", text="Next", icon='TRIA_RIGHT').direction = 'NEXT'
         
         #box = pie.split().column()
         #box.operator("mesh.remove_doubles", text="Merge By Distance", icon='NONE')
@@ -63,7 +65,7 @@ class PIE_MT_Workspaces(Menu):
         #box.operator("mesh.delete", text="Only Faces", icon='UV_FACESEL').type = 'ONLY_FACE'
         
         
-class layout(bpy.types.Operator):
+class PIE_OT_Layout(bpy.types.Operator):
     bl_idname = "class.layout"
     bl_label = "layout"
     
@@ -73,7 +75,7 @@ class layout(bpy.types.Operator):
         bpy.context.window.workspace = bpy.data.workspaces['Layout']
         return {'FINISHED'}
     
-class sculpting(bpy.types.Operator):
+class PIE_OT_Sculpting(bpy.types.Operator):
     bl_idname = "class.sculpting"
     bl_label = "sculpting"
     
@@ -83,7 +85,7 @@ class sculpting(bpy.types.Operator):
         bpy.context.window.workspace = bpy.data.workspaces['Sculpting']
         return {'FINISHED'}
 
-class uvediting(bpy.types.Operator):
+class PIE_OT_UVEditing(bpy.types.Operator):
     bl_idname = "class.uvediting"
     bl_label = "uvediting"
     
@@ -93,7 +95,7 @@ class uvediting(bpy.types.Operator):
         bpy.context.window.workspace = bpy.data.workspaces['UV Editing']
         return {'FINISHED'}
 
-class shading(bpy.types.Operator):
+class PIE_OT_Shading(bpy.types.Operator):
     bl_idname = "class.shading"
     bl_label = "shading"
     
@@ -103,7 +105,7 @@ class shading(bpy.types.Operator):
         bpy.context.window.workspace = bpy.data.workspaces['Shading']
         return {'FINISHED'}
     
-class animation(bpy.types.Operator):
+class PIE_OT_Animation(bpy.types.Operator):
     bl_idname = "class.animation"
     bl_label = "animation"
     
@@ -113,17 +115,26 @@ class animation(bpy.types.Operator):
         bpy.context.window.workspace = bpy.data.workspaces['Animation']
         return {'FINISHED'}
     
+class PIE_OT_TxPaint(bpy.types.Operator):
+    bl_idname = "class.txpaint"
+    bl_label = "texture paint"
+    
+    def execute(self, context):
+        
+        layout = self.layout
+        bpy.context.window.workspace = bpy.data.workspaces['Texture Paint']
+        return {'FINISHED'}
     
 
 
 classes = (
     PIE_MT_Workspaces,
-    layout,
-    sculpting,
-    uvediting,
-    shading,
-    animation,
-    
+    PIE_OT_Layout,
+    PIE_OT_Sculpting,
+    PIE_OT_UVEditing,
+    PIE_OT_Shading,
+    PIE_OT_Animation,
+    PIE_OT_TxPaint
     )
 
 
