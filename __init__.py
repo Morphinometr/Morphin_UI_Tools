@@ -47,6 +47,7 @@ sub_modules_names = (
     "QuickPref",
     "Pie_Workspaces",
     "Pie_Snap",
+    "Pie_ViewNumpad",
     
     
     )
