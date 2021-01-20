@@ -19,8 +19,8 @@
 bl_info = {
     "name": "Pie_Views",
     "description": "Viewport Numpad Menu",
-    "author": "pitiwazou, meta-androcto, morphin",
-    "version": (0, 0, 1),
+    "author": "pitiwazou, meta-androcto, morphin, Martynas Žiemys",
+    "version": (0, 0, 2),
     "blender": (2, 80, 0),
     "location": "'C' click-drag",
     "warning": "",
@@ -63,7 +63,46 @@ class PIE_MT_ViewNumpad(Menu):
         pie.operator("view3d.view_camera", text="View Cam", icon='VIEW_CAMERA')
         # 3 - BOTTOM - RIGHT
         pie.operator("view3d.view_persportho", text="Persp/Ortho", icon='VIEW_PERSPECTIVE')
+        # LEFT EXTRA
+        pie.separator()
+        # RIGHT EXTRA
+        pie.separator()
+        # BOTTOM EXTRA
+        other = pie.column()
+        gap = other.column()
+        gap.separator()
+        gap.scale_y = 7
+        #other_menu = other.box().column() #dark background
+        other.scale_y=1.2
+        other.scale_x=1.2
+        
+        box = other.grid_flow(columns=2, align=True, even_columns=True, even_rows=True, row_major=True)
+                        
+        #row
+        box.operator("view3d.camera_to_view", text="Cam To View", icon='HIDE_OFF')
+        box.operator("view3d.object_as_camera", text="Make Active", icon='VIEW_CAMERA')
 
+        #row
+        box.operator("view3d.view_all", text="View All", icon='SHADING_BBOX').center = True
+        box.operator("view3d.view_selected", text="Selected", icon='VIS_SEL_11') 
+
+        #row
+        box.operator("view3d.localview", text="Local/Global", icon='RESTRICT_VIEW_ON')
+        box.operator("screen.screen_full_area", text="Toggle Full", icon='IMAGE_BACKGROUND')
+        
+        #row
+        box.prop(rd, "use_border", text="Border")
+        if context.space_data.lock_camera is False:
+            box.operator("wm.context_toggle", text="Lock Cam",
+                         icon='LOCKED').data_path = "space_data.lock_camera"
+        elif context.space_data.lock_camera is True:
+            box.operator("wm.context_toggle", text="Unlock Cam",
+                         icon='UNLOCKED').data_path = "space_data.lock_camera"
+
+        icon_locked = 'LOCKED' if ob and ob.lock_rotation[0] is False else \
+                      'UNLOCKED' if ob and ob.lock_rotation[0] is True else 'LOCKED'
+        
+        
 
 classes = (
     PIE_MT_ViewNumpad,

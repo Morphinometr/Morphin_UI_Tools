@@ -12,7 +12,7 @@ bl_info = {"name": "QuickPref",
 
     
     
-class VIEW3D_OT_local_view_custom(bpy.types.Operator):
+class VIEW3D_OT_LocalViewCustom(bpy.types.Operator):
     """Toggles Local View without changing perspective"""
     bl_idname = "view3d.localview_custom"
     bl_label = "Local View without frame selected"
@@ -33,11 +33,11 @@ class VIEW3D_OT_local_view_custom(bpy.types.Operator):
 
 
 
-class VIEW3D_PT_panel_quickpref(bpy.types.Panel):
+class VIEW3D_PT_PanelQuickPref(bpy.types.Panel):
     """Creates a Panel in the scene context of the 3D view N panel"""
     
     bl_label = "QuickPref"
-    bl_idname = "QUICK_PREF"
+    bl_idname = "QUICK_PT_PREF"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = "View"
@@ -45,33 +45,32 @@ class VIEW3D_PT_panel_quickpref(bpy.types.Panel):
     
     def draw(self, context):
         layout = self.layout
-      
-              
-        #row = layout.grid_flow(row_major = True, columns = 2, align = True, even_rows = True)
         column = layout.column(align=True)
-        row = column.row(align=True)
         
+        row = column.row(align=True)
         row.prop(context.preferences.inputs, "view_rotate_method", expand = True)
-        #row = layout.row(align=True)
+        
         column.operator("view3d.localview_custom", icon = 'OBJECT_HIDDEN', text = 'Local view')
                 
-        
         column.prop(context.preferences.inputs, "use_rotate_around_active")
         
         column.prop(context.preferences.edit, "use_mouse_depth_cursor")
         
         column.prop(context.preferences.inputs, "use_mouse_emulate_3_button")
         
-        
+classes = (
+    VIEW3D_OT_LocalViewCustom,
+    VIEW3D_PT_PanelQuickPref,
+    
+    )
                     
                 
 def register():
-    bpy.utils.register_class(VIEW3D_PT_panel_quickpref)
-    bpy.utils.register_class(VIEW3D_OT_local_view_custom)
+    for cls in classes:
+        bpy.utils.register_class(cls)
 
 
 def unregister():
-    bpy.utils.unregister_class(VIEW3D_PT_panel_quickpref)
-    bpy.utils.unregister_class(VIEW3D_OT_local_view_custom)
-
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
 
