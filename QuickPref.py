@@ -23,7 +23,6 @@ class VIEW3D_OT_LocalViewCustom(bpy.types.Operator):
             return True
         else:
             return len(context.selected_objects) > 0 and context.active_object is not None
-        #return context.active_object is not None
         
     def execute(self, context):
         bpy.ops.view3d.localview(frame_selected=False)
@@ -51,7 +50,7 @@ class VIEW3D_PT_PanelQuickPref(bpy.types.Panel):
         row.prop(context.preferences.inputs, "view_rotate_method", expand = True)
         
         column.operator("view3d.localview_custom", icon = 'OBJECT_HIDDEN', text = 'Local view')
-                
+        
         column.prop(context.preferences.inputs, "use_rotate_around_active")
         
         column.prop(context.preferences.edit, "use_mouse_depth_cursor")
@@ -73,4 +72,7 @@ def register():
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
+        
+if __name__ == "__main__":
+    register()
 

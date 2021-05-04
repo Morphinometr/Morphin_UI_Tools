@@ -60,7 +60,7 @@ class PIE_MT_ViewNumpad(Menu):
         # 9 - TOP - RIGHT
         pie.operator("view3d.view_axis", text="Back", icon='EVENT_B').type = 'BACK'
         # 1 - BOTTOM - LEFT
-        pie.operator("view3d.view_camera", text="View Cam", icon='VIEW_CAMERA')
+        pie.operator("view3d.localview", text="Local/Global", icon='RESTRICT_VIEW_ON').frame_selected=False
         # 3 - BOTTOM - RIGHT
         pie.operator("view3d.view_persportho", text="Persp/Ortho", icon='VIEW_PERSPECTIVE')
         # LEFT EXTRA
@@ -79,15 +79,15 @@ class PIE_MT_ViewNumpad(Menu):
         box = other.grid_flow(columns=2, align=True, even_columns=True, even_rows=True, row_major=True)
                         
         #row
+        box.operator("view3d.view_camera", text="View Cam", icon='VIEW_CAMERA')
         box.operator("view3d.camera_to_view", text="Cam To View", icon='HIDE_OFF')
-        box.operator("view3d.object_as_camera", text="Make Active", icon='VIEW_CAMERA')
-
+        
         #row
         box.operator("view3d.view_all", text="View All", icon='SHADING_BBOX').center = True
         box.operator("view3d.view_selected", text="Selected", icon='VIS_SEL_11') 
 
         #row
-        box.operator("view3d.localview", text="Local/Global", icon='RESTRICT_VIEW_ON')
+        box.operator("view3d.object_as_camera", text="Make Active", icon='OUTLINER_DATA_CAMERA')
         box.operator("screen.screen_full_area", text="Toggle Full", icon='IMAGE_BACKGROUND')
         
         #row
