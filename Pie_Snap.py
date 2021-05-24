@@ -38,12 +38,12 @@ from bpy.types import (
 
 class PIE_MT_3DSnap(Menu):
     bl_idname = "PIE_MT_3DSnap"
-    bl_label = "Snap"
+    bl_label = "Snap 3D"
        
     def draw(self, context):
         layout = self.layout
-        prefs = context.preferences
         pie = layout.menu_pie()
+        
         # 4 - LEFT
         pie.operator("snap3d.increment", icon='SNAP_INCREMENT')
         # 6 - RIGHT
@@ -69,8 +69,8 @@ class PIE_MT_2DSnap(Menu):
     
     def draw(self, context):
         layout = self.layout
-        prefs = context.preferences
         pie = layout.menu_pie()
+        
         # 4 - LEFT
         pie.operator("snap2d.increment", text="Increment", icon='SNAP_INCREMENT')
         # 6 - RIGHT
@@ -269,7 +269,7 @@ def register():
 
     wm = bpy.context.window_manager
     if wm.keyconfigs.addon:
-        km = wm.keyconfigs.addon.keymaps.new(name='3D View', space_type='VIEW_3D')
+        km = wm.keyconfigs.addon.keymaps.new(name='3D View Generic', space_type='VIEW_3D')
         kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'CLICK_DRAG')
         kmi.properties.name = "PIE_MT_3DSnap"
         addon_keymaps.append((km, kmi))
