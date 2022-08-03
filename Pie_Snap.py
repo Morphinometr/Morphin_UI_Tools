@@ -21,7 +21,7 @@ bl_info = {
     "description": "Snap Pie Menu (keymap: S)",
     "author": "Morphin",
     "blender": (2, 90, 0),
-    "version": (0, 0, 1),
+    "version": (0, 0, 2),
     "location": "'S' click-drag",
     "warning": "",
     "doc_url": "",
@@ -60,44 +60,36 @@ class PIE_MT_3DSnap(Menu):
         pie.operator("snap3d.edge_center", icon='SNAP_MIDPOINT')
         # 3 - BOTTOM - RIGHT
         pie.operator("snap3d.edge_perpendicular", icon='SNAP_PERPENDICULAR')
-        
-        #pie.separator()
        
 class PIE_MT_2DSnap(Menu):
     bl_idname = "PIE_MT_2DSnap"
-    bl_label = "Snap"
+    bl_label = "Snap UVs"
     
     def draw(self, context):
         layout = self.layout
         pie = layout.menu_pie()
         
         # 4 - LEFT
-        pie.operator("snap2d.increment", text="Increment", icon='SNAP_INCREMENT')
+        pie.operator("snap2d.increment", icon='SNAP_INCREMENT')
         # 6 - RIGHT
-        pie.operator("snap2d.vertex", text="Vertex", icon='SNAP_VERTEX')
+        pie.operator("snap2d.vertex", icon='SNAP_VERTEX')
         # 2 - BOTTOM
-        #pie.operator("snap2d.corner", text="Corner", icon='SNAP_PERPENDICULAR')
-        #checkbox icon
         if bpy.context.space_data.uv_editor.pixel_snap_mode == "CORNER":
             pie.operator("snap2d.corner", icon='CHECKBOX_HLT')
         else: 
             pie.operator("snap2d.corner",icon='CHECKBOX_DEHLT')
         # 8 - TOP
-        pie.separator()
+        pie.operator("snap2d.flip_y", icon='SORT_DESC')
         # 7 - TOP - LEFT
-        pie.separator()
+        pie.operator("snap2d.grid", icon='SNAP_GRID')
         # 9 - TOP - RIGHT
-        pie.separator()
+        pie.operator("snap2d.flip_x", icon='FORWARD')
         # 1 - BOTTOM - LEFT
-        #pie.operator("snap2d.center", text="Center", icon='SNAP_FACE_CENTER')
-        #checkbox icon
         if bpy.context.space_data.uv_editor.pixel_snap_mode == "CENTER":
             pie.operator("snap2d.center", icon='CHECKBOX_HLT')
         else: 
             pie.operator("snap2d.center",icon='CHECKBOX_DEHLT')
         # 3 - BOTTOM - RIGHT
-        #pie.operator("snap2d.disabled", text="Disabled", icon='SNAP_OFF') 
-        #checkbox icon
         if bpy.context.space_data.uv_editor.pixel_snap_mode == "DISABLED":
             pie.operator("snap2d.disabled", icon='CHECKBOX_HLT')
         else: 
@@ -110,8 +102,6 @@ class PIE_OT_3DIncrement(bpy.types.Operator):
     bl_label = "Increment"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.tool_settings.snap_elements = {'INCREMENT'}
         bpy.context.tool_settings.use_snap_grid_absolute = False
         return {'FINISHED'}
@@ -121,8 +111,6 @@ class PIE_OT_3DGrid(bpy.types.Operator):
     bl_label = "Grid"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.tool_settings.snap_elements = {'INCREMENT'}
         bpy.context.tool_settings.use_snap_grid_absolute = True
         return {'FINISHED'}
@@ -132,8 +120,6 @@ class PIE_OT_3DVertex(bpy.types.Operator):
     bl_label = "Vertex"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.tool_settings.snap_elements = {'VERTEX'}
         return {'FINISHED'}
 
@@ -142,8 +128,6 @@ class PIE_OT_3DFace(bpy.types.Operator):
     bl_label = "Face"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.tool_settings.snap_elements = {'FACE'}
         return {'FINISHED'}
 
@@ -152,8 +136,6 @@ class PIE_OT_3DEdge(bpy.types.Operator):
     bl_label = "Edge"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.tool_settings.snap_elements = {'EDGE'}
         return {'FINISHED'}
 
@@ -162,8 +144,6 @@ class PIE_OT_3DEdgeCenter(bpy.types.Operator):
     bl_label = "Edge center"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.tool_settings.snap_elements = {'EDGE_MIDPOINT'}
         return {'FINISHED'}
     
@@ -172,8 +152,6 @@ class PIE_OT_3DEdgePerpendicular(bpy.types.Operator):
     bl_label = "Edge perpendicular"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.tool_settings.snap_elements = {'EDGE_PERPENDICULAR'}
         return {'FINISHED'}
     
@@ -182,8 +160,6 @@ class PIE_OT_3DVolume(bpy.types.Operator):
     bl_label = "Volume"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.tool_settings.snap_elements = {'VOLUME'}
         return {'FINISHED'}
 
@@ -192,52 +168,77 @@ class PIE_OT_3DVolume(bpy.types.Operator):
 class PIE_OT_2DIncrement(bpy.types.Operator):
     bl_idname = "snap2d.increment"
     bl_label = "Increment"
+    bl_description = "Set snaping to grid increments. Custom grid can be set in overlays"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.tool_settings.snap_uv_element = 'INCREMENT'
+        bpy.context.tool_settings.use_snap_uv_grid_absolute = False
+        return {'FINISHED'}
+
+class PIE_OT_2DGrid(bpy.types.Operator):
+    bl_idname = "snap2d.grid"
+    bl_label = "Grid"
+    bl_description = "Set snaping to grid points. Custom grid can be set in overlays"
+    
+    def execute(self, context):
+        bpy.context.tool_settings.snap_uv_element = 'INCREMENT'
+        bpy.context.tool_settings.use_snap_uv_grid_absolute = True
         return {'FINISHED'}
     
 class PIE_OT_2DVertex(bpy.types.Operator):
     bl_idname = "snap2d.vertex"
     bl_label = "Vertex"
+    bl_description = "Set snaping to UV vertices"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.tool_settings.snap_uv_element = 'VERTEX'
         return {'FINISHED'}
 
 class PIE_OT_2DCorner(bpy.types.Operator):
     bl_idname = "snap2d.corner"
     bl_label = "Corner"
+    bl_description = "Snap UVs to pixel corners. Overrites other snap settings"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.space_data.uv_editor.pixel_snap_mode = 'CORNER'
         return {'FINISHED'}
 
 class PIE_OT_2DCenter(bpy.types.Operator):
     bl_idname = "snap2d.center"
     bl_label = "Center"
+    bl_description = "Snap UVs to pixel centers. Overrites other snap settings" 
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.space_data.uv_editor.pixel_snap_mode = 'CENTER'
         return {'FINISHED'}
 
 class PIE_OT_2DDisabled(bpy.types.Operator):
     bl_idname = "snap2d.disabled"
     bl_label = "Disabled"
+    bl_description = "Disable snapping UVs to pixels"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.space_data.uv_editor.pixel_snap_mode = 'DISABLED'
         return {'FINISHED'}
+
+class PIE_OT_2DFlipX(bpy.types.Operator):
+    bl_idname = "snap2d.flip_x"
+    bl_label = "Flip UVs X"
+    bl_description = "Flip selected UVs in X axis"
+    
+    def execute(self, context):
+        bpy.ops.transform.mirror(constraint_axis=(True, False, False))
+        return {'FINISHED'}
+
+class PIE_OT_2DFlipY(bpy.types.Operator):
+    bl_idname = "snap2d.flip_y"
+    bl_label = "Flip UVs Y"
+    bl_description = "Flip selected UVs in Y axis"
+    
+    def execute(self, context):
+        bpy.ops.transform.mirror(constraint_axis=(False, True, False))
+        return {'FINISHED'}
+
 
 
 classes = (
@@ -252,12 +253,13 @@ classes = (
     PIE_OT_3DEdgePerpendicular,
     PIE_OT_3DVolume,
     PIE_OT_2DIncrement,
+    PIE_OT_2DGrid,
     PIE_OT_2DVertex,
     PIE_OT_2DCorner,
     PIE_OT_2DCenter,
     PIE_OT_2DDisabled,
-    
-    
+    PIE_OT_2DFlipX,
+    PIE_OT_2DFlipY
     )
 
 addon_keymaps = []

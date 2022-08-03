@@ -19,7 +19,7 @@
 bl_info = {
     "name": "Pie_Views",
     "description": "Viewport Numpad Menu",
-    "author": "pitiwazou, meta-androcto, morphin, Martynas Žiemys",
+    "author": "Morphin",
     "version": (0, 0, 2),
     "blender": (2, 80, 0),
     "location": "'C' click-drag",
@@ -62,7 +62,7 @@ class PIE_MT_ViewNumpad(Menu):
         # 1 - BOTTOM - LEFT
         pie.operator("view3d.localview", text="Local/Global", icon='RESTRICT_VIEW_ON').frame_selected=False
         # 3 - BOTTOM - RIGHT
-        pie.operator("view3d.view_persportho", text="Persp/Ortho", icon='VIEW_PERSPECTIVE')
+        pie.operator("view3d.view_selected", text="Selected", icon='VIS_SEL_11')
         # LEFT EXTRA
         pie.separator()
         # RIGHT EXTRA
@@ -72,7 +72,6 @@ class PIE_MT_ViewNumpad(Menu):
         gap = other.column()
         gap.separator()
         gap.scale_y = 7
-        #other_menu = other.box().column() #dark background
         other.scale_y=1.2
         other.scale_x=1.2
         
@@ -84,8 +83,8 @@ class PIE_MT_ViewNumpad(Menu):
         
         #row
         box.operator("view3d.view_all", text="View All", icon='SHADING_BBOX').center = True
-        box.operator("view3d.view_selected", text="Selected", icon='VIS_SEL_11') 
-
+        box.operator("view3d.view_persportho", text="Persp/Ortho", icon='VIEW_PERSPECTIVE')
+         
         #row
         box.operator("view3d.object_as_camera", text="Make Active", icon='OUTLINER_DATA_CAMERA')
         box.operator("screen.screen_full_area", text="Toggle Full", icon='IMAGE_BACKGROUND')
@@ -98,9 +97,6 @@ class PIE_MT_ViewNumpad(Menu):
         elif context.space_data.lock_camera is True:
             box.operator("wm.context_toggle", text="Unlock Cam",
                          icon='UNLOCKED').data_path = "space_data.lock_camera"
-
-        icon_locked = 'LOCKED' if ob and ob.lock_rotation[0] is False else \
-                      'UNLOCKED' if ob and ob.lock_rotation[0] is True else 'LOCKED'
         
         
 

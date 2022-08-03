@@ -17,12 +17,15 @@ class VIEW3D_OT_LocalViewCustom(bpy.types.Operator):
     bl_idname = "view3d.localview_custom"
     bl_label = "Local View without frame selected"
 
+    
     @classmethod
     def poll(cls, context):
         if context.space_data.local_view:
             return True
+        elif len(context.selected_objects) > 0 and context.active_object is not None:
+            return True
         else:
-            return len(context.selected_objects) > 0 and context.active_object is not None
+            cls.poll_message_set("Expect selected objects")
         
     def execute(self, context):
         bpy.ops.view3d.localview(frame_selected=False)

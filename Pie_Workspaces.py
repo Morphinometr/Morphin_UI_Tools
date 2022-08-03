@@ -59,19 +59,12 @@ class PIE_MT_Workspaces(Menu):
         # 3 - BOTTOM - RIGHT
         pie.operator("screen.workspace_cycle", text="Next", icon='TRIA_RIGHT').direction = 'NEXT'
         
-        #box = pie.split().column()
-        #box.operator("mesh.remove_doubles", text="Merge By Distance", icon='NONE')
-        #box.operator("mesh.delete", text="Only Edge & Faces", icon='NONE').type = 'EDGE_FACE'
-        #box.operator("mesh.delete", text="Only Faces", icon='UV_FACESEL').type = 'ONLY_FACE'
-        
         
 class PIE_OT_Layout(bpy.types.Operator):
     bl_idname = "class.layout"
     bl_label = "layout"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.window.workspace = bpy.data.workspaces['Layout']
         return {'FINISHED'}
     
@@ -80,8 +73,6 @@ class PIE_OT_Sculpting(bpy.types.Operator):
     bl_label = "sculpting"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.window.workspace = bpy.data.workspaces['Sculpting']
         return {'FINISHED'}
 
@@ -90,8 +81,6 @@ class PIE_OT_UVEditing(bpy.types.Operator):
     bl_label = "uvediting"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.window.workspace = bpy.data.workspaces['UV Editing']
         return {'FINISHED'}
 
@@ -100,8 +89,6 @@ class PIE_OT_Shading(bpy.types.Operator):
     bl_label = "shading"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.window.workspace = bpy.data.workspaces['Shading']
         return {'FINISHED'}
     
@@ -110,8 +97,6 @@ class PIE_OT_Animation(bpy.types.Operator):
     bl_label = "animation"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.window.workspace = bpy.data.workspaces['Animation']
         return {'FINISHED'}
     
@@ -120,8 +105,6 @@ class PIE_OT_TxPaint(bpy.types.Operator):
     bl_label = "texture paint"
     
     def execute(self, context):
-        
-        layout = self.layout
         bpy.context.window.workspace = bpy.data.workspaces['Texture Paint']
         return {'FINISHED'}
     
