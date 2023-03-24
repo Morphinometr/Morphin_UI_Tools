@@ -34,6 +34,20 @@ from bpy.types import (
         Operator,
         )
 
+def get_pixel_snap_mode ():
+    if bpy.app.version < (3, 4, 0):
+        return bpy.context.space_data.uv_editor.pixel_snap_mode
+    else:
+        return bpy.context.space_data.uv_editor.pixel_round_mode
+
+
+def set_pixel_snap_mode (mode:str):
+    if bpy.app.version < (3, 4, 0):
+        bpy.context.space_data.uv_editor.pixel_snap_mode = mode
+    else:
+        bpy.context.space_data.uv_editor.pixel_round_mode = mode
+
+
 #Pie classes
 
 class PIE_MT_3DSnap(Menu):
@@ -74,7 +88,7 @@ class PIE_MT_2DSnap(Menu):
         # 6 - RIGHT
         pie.operator("snap2d.vertex", icon='SNAP_VERTEX')
         # 2 - BOTTOM
-        if bpy.context.space_data.uv_editor.pixel_snap_mode == "CORNER":
+        if get_pixel_snap_mode() == "CORNER":
             pie.operator("snap2d.corner", icon='CHECKBOX_HLT')
         else: 
             pie.operator("snap2d.corner",icon='CHECKBOX_DEHLT')
@@ -85,12 +99,12 @@ class PIE_MT_2DSnap(Menu):
         # 9 - TOP - RIGHT
         pie.operator("snap2d.flip_x", icon='FORWARD')
         # 1 - BOTTOM - LEFT
-        if bpy.context.space_data.uv_editor.pixel_snap_mode == "CENTER":
+        if get_pixel_snap_mode() == "CENTER":
             pie.operator("snap2d.center", icon='CHECKBOX_HLT')
         else: 
             pie.operator("snap2d.center",icon='CHECKBOX_DEHLT')
         # 3 - BOTTOM - RIGHT
-        if bpy.context.space_data.uv_editor.pixel_snap_mode == "DISABLED":
+        if get_pixel_snap_mode() == "DISABLED":
             pie.operator("snap2d.disabled", icon='CHECKBOX_HLT')
         else: 
             pie.operator("snap2d.disabled",icon='CHECKBOX_DEHLT')
@@ -200,7 +214,7 @@ class PIE_OT_2DCorner(bpy.types.Operator):
     bl_description = "Snap UVs to pixel corners. Overrites other snap settings"
     
     def execute(self, context):
-        bpy.context.space_data.uv_editor.pixel_snap_mode = 'CORNER'
+        set_pixel_snap_mode('CORNER')
         return {'FINISHED'}
 
 class PIE_OT_2DCenter(bpy.types.Operator):
@@ -209,7 +223,7 @@ class PIE_OT_2DCenter(bpy.types.Operator):
     bl_description = "Snap UVs to pixel centers. Overrites other snap settings" 
     
     def execute(self, context):
-        bpy.context.space_data.uv_editor.pixel_snap_mode = 'CENTER'
+        set_pixel_snap_mode('CENTER')
         return {'FINISHED'}
 
 class PIE_OT_2DDisabled(bpy.types.Operator):
@@ -218,7 +232,7 @@ class PIE_OT_2DDisabled(bpy.types.Operator):
     bl_description = "Disable snapping UVs to pixels"
     
     def execute(self, context):
-        bpy.context.space_data.uv_editor.pixel_snap_mode = 'DISABLED'
+        set_pixel_snap_mode('DISABLED')
         return {'FINISHED'}
 
 class PIE_OT_2DFlipX(bpy.types.Operator):
