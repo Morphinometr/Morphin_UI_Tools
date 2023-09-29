@@ -18,7 +18,7 @@
 
 bl_info = {
     "name": "Pie_Snap",
-    "description": "Snap Pie Menu (keymap: S)",
+    "description": "Snap Pie Menu",
     "author": "Morphin",
     "blender": (2, 90, 0),
     "version": (0, 0, 2),

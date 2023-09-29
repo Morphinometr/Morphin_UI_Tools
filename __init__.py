@@ -37,7 +37,7 @@ bl_info = {
     "version": (0, 0, 2),
     "blender": (2, 90, 0),
     "description": "UI",
-    "location": "Addons Preferences",
+    #"location": "Addons Preferences",
     "warning": "",
     "doc_url": "https://github.com/Morphinometr/Morphin_UI_Tools",
     "category": "Interface"
@@ -48,7 +48,7 @@ sub_modules_names = (
     "Pie_Workspaces",
     "Pie_Snap",
     "Pie_ViewNumpad",
-    
+    "pie_brushes"
     
     )
 
