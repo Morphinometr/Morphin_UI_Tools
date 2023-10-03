@@ -11,7 +11,6 @@ bl_info = {"name": "QuickPref",
            "category": "3D View", }
 
     
-    
 class VIEW3D_OT_LocalViewCustom(bpy.types.Operator):
     """Toggles Local View without changing perspective"""
     bl_idname = "view3d.localview_custom"
@@ -31,8 +30,6 @@ class VIEW3D_OT_LocalViewCustom(bpy.types.Operator):
         bpy.ops.view3d.localview(frame_selected=False)
         
         return {'FINISHED'}
-
-
 
 
 class VIEW3D_PT_PanelQuickPref(bpy.types.Panel):
@@ -109,6 +106,17 @@ class VIEW3D_PT_PanelCurvePref(bpy.types.Panel):
         col.prop(context.preferences.edit, "show_only_selected_curve_keyframes", text="Selected")
         col.prop(context.preferences.edit, "fcurve_unselected_alpha", text="Unselected")
 
+
+def morphin_view3d_header(self, context):
+    mode_string = context.mode
+    tool_settings = context.tool_settings
+    if mode_string == 'OBJECT':
+    
+
+        row = self.layout.row(align=True)
+        row.prop(tool_settings, "use_transform_data_origin", text="", icon="OBJECT_ORIGIN")
+
+
 classes = (
     VIEW3D_OT_LocalViewCustom,
     VIEW3D_PT_PanelQuickPref,
@@ -121,11 +129,13 @@ classes = (
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
+    bpy.types.VIEW3D_HT_tool_header.append(morphin_view3d_header)
 
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
+    bpy.types.VIEW3D_HT_tool_header.remove(morphin_view3d_header)
         
 if __name__ == "__main__":
     register()
