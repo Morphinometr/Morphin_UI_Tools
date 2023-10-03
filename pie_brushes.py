@@ -17,12 +17,11 @@
 # ##### END GPL LICENSE BLOCK #####
 
 bl_info = {
-    "name": "Pie_Brushes",
+    "name": "Pie Brushes",
     "description": "Brushes Menu",
     "author": "Morphin",
     "version": (0, 0, 1),
     "blender": (2, 80, 0),
-    "location": "'B' click-drag",
     "warning": "",
     "doc_url": "",
     "category": "3D View"

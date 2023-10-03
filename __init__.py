@@ -44,10 +44,10 @@ bl_info = {
     }
 
 sub_modules_names = (
-    "QuickPref",
-    "Pie_Workspaces",
-    "Pie_Snap",
-    "Pie_ViewNumpad",
+    "quick_pref",
+    "pie_workspaces",
+    "pie_snap",
+    "pie_view_numpad",
     "pie_brushes"
     
     )

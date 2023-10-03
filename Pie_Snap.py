@@ -17,22 +17,19 @@
 # ##### END GPL LICENSE BLOCK #####
 
 bl_info = {
-    "name": "Pie_Snap",
+    "name": "Pie Snap",
     "description": "Snap Pie Menu",
     "author": "Morphin",
     "blender": (2, 90, 0),
     "version": (0, 0, 2),
-    "location": "'S' click-drag",
     "warning": "",
     "doc_url": "",
     "category": "3D View, UV Editor"
     }
 
 import bpy
-from bpy.types import (
-        Menu,
-        Operator,
-        )
+from bpy.types import Menu
+        
 
 def get_pixel_snap_mode ():
     if bpy.app.version < (3, 4, 0):

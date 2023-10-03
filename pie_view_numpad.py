@@ -17,22 +17,18 @@
 # ##### END GPL LICENSE BLOCK #####
 
 bl_info = {
-    "name": "Pie_Views",
+    "name": "Pie Views",
     "description": "Viewport Numpad Menu",
     "author": "Morphin",
     "version": (0, 0, 2),
     "blender": (2, 80, 0),
-    "location": "'C' click-drag",
     "warning": "",
     "doc_url": "",
     "category": "3D View"
     }
 
 import bpy
-from bpy.types import (
-        Menu,
-        Operator,
-        )
+from bpy.types import Menu
 
 
 # Pie views numpad
@@ -42,7 +38,6 @@ class PIE_MT_ViewNumpad(Menu):
 
     def draw(self, context):
         layout = self.layout
-        ob = context.active_object
         pie = layout.menu_pie()
         scene = context.scene
         rd = scene.render

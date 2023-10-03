@@ -24,7 +24,6 @@ bl_info = {
     "author": "Morphin",
     "version": (0, 0, 1),
     "blender": (2, 90, 0),
-    "location": "'W' click-drag",
     "warning": "",
     "doc_url": "",
     "category": "Window"
