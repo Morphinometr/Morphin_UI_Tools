@@ -59,10 +59,61 @@ class VIEW3D_PT_PanelQuickPref(bpy.types.Panel):
         column.prop(context.preferences.edit, "use_mouse_depth_cursor")
         
         column.prop(context.preferences.inputs, "use_mouse_emulate_3_button")
+
+
+class VIEW3D_PT_PanelAnimPref(bpy.types.Panel):
+    """Creates a Panel in the scene context of the 3D view N panel"""
+    
+    bl_label = "QuickPref"
+    bl_idname = "QUICK_PT_ANIM_PREF"
+    bl_space_type = 'DOPESHEET_EDITOR'
+    bl_region_type = 'UI'
+    bl_category = "Action"
+    
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+        col = layout.column(align=True, heading="Insert Only")
         
+        col.prop(context.preferences.edit, "use_keyframe_insert_available", text="Available")
+        col.prop(context.preferences.edit, "use_keyframe_insert_needed", text="Needed")
+        col = layout.column(align=True, heading="Show")
+        col.prop(context.preferences.edit, "use_anim_channel_group_colors", text="Group")
+        
+        col = layout.column(align=True)
+        col.label(text="New Curve:")
+        col.prop(context.preferences.edit, "keyframe_new_interpolation_type", text="Interpolation")
+        col.prop(context.preferences.edit, "keyframe_new_handle_type", text="Handles")
+
+
+class VIEW3D_PT_PanelCurvePref(bpy.types.Panel):
+    """Creates a Panel in the scene context of the 3D view N panel"""
+    
+    bl_label = "QuickPref"
+    bl_idname = "QUICK_PT_CURVE_PREF"
+    bl_space_type = 'GRAPH_EDITOR'
+    bl_region_type = 'UI'
+    bl_category = "View"
+    
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        layout.use_property_decorate = False
+        col = layout.column(align=True, heading="Insert Only")
+        
+        col.prop(context.preferences.edit, "use_keyframe_insert_needed", text="Available")
+        col.prop(context.preferences.edit, "use_keyframe_insert_available", text="Needed")
+        col = layout.column(align=True, heading="Show")
+        col.prop(context.preferences.edit, "use_anim_channel_group_colors", text="Group")
+        col.prop(context.preferences.edit, "show_only_selected_curve_keyframes", text="Selected")
+        col.prop(context.preferences.edit, "fcurve_unselected_alpha", text="Unselected")
+
 classes = (
     VIEW3D_OT_LocalViewCustom,
     VIEW3D_PT_PanelQuickPref,
+    VIEW3D_PT_PanelAnimPref,
+    VIEW3D_PT_PanelCurvePref,
     
     )
                     
