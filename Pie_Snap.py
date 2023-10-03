@@ -22,6 +22,7 @@ bl_info = {
     "author": "Morphin",
     "blender": (2, 90, 0),
     "version": (0, 0, 2),
+    "location": "PIE_MT_2DSnap, PIE_MT_3DSnap",
     "warning": "",
     "doc_url": "",
     "category": "3D View, UV Editor"
@@ -280,29 +281,29 @@ def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-    wm = bpy.context.window_manager
-    if wm.keyconfigs.addon:
-        km = wm.keyconfigs.addon.keymaps.new(name='3D View Generic', space_type='VIEW_3D')
-        kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'CLICK_DRAG')
-        kmi.properties.name = "PIE_MT_3DSnap"
-        addon_keymaps.append((km, kmi))
+    # wm = bpy.context.window_manager
+    # if wm.keyconfigs.addon:
+    #     km = wm.keyconfigs.addon.keymaps.new(name='3D View Generic', space_type='VIEW_3D')
+    #     kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'CLICK_DRAG')
+    #     kmi.properties.name = "PIE_MT_3DSnap"
+    #     addon_keymaps.append((km, kmi))
         
-        km = wm.keyconfigs.addon.keymaps.new(name='UV Editor')
-        kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'CLICK_DRAG')
-        kmi.properties.name = "PIE_MT_2DSnap"
-        addon_keymaps.append((km, kmi))
+    #     km = wm.keyconfigs.addon.keymaps.new(name='UV Editor')
+    #     kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'CLICK_DRAG')
+    #     kmi.properties.name = "PIE_MT_2DSnap"
+    #     addon_keymaps.append((km, kmi))
         
 
 def unregister():
     for cls in classes:
         bpy.utils.unregister_class(cls)
 
-    wm = bpy.context.window_manager
-    kc = wm.keyconfigs.addon
-    if kc:
-        for km, kmi in addon_keymaps:
-            km.keymap_items.remove(kmi)
-    addon_keymaps.clear()
+    # wm = bpy.context.window_manager
+    # kc = wm.keyconfigs.addon
+    # if kc:
+    #     for km, kmi in addon_keymaps:
+    #         km.keymap_items.remove(kmi)
+    # addon_keymaps.clear()
 
 
 if __name__ == "__main__":

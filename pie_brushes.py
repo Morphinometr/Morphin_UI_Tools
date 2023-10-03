@@ -22,6 +22,7 @@ bl_info = {
     "author": "Morphin",
     "version": (0, 0, 1),
     "blender": (2, 80, 0),
+    "loacation": "PIE_MT_texture_paint_brushes",
     "warning": "",
     "doc_url": "",
     "category": "3D View"
