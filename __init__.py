@@ -48,7 +48,8 @@ sub_modules_names = (
     "pie_workspaces",
     "pie_snap",
     "pie_view_numpad",
-    "pie_brushes"
+    "pie_brushes",
+    "pie_manipulator"
     
     )
 
