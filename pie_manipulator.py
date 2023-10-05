@@ -85,7 +85,7 @@ class PIE_OT_Morph_Manupulators_default(Operator):
     bl_label = "Pie Transform Manipulator"
     
     def execute(self, context):
-        bpy.data.scenes["Scene"].transform_orientation_slots[1].type = 'DEFAULT'
+        context.scene.transform_orientation_slots[1].type = 'DEFAULT'
         return {'FINISHED'}
 
 
