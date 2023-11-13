@@ -99,8 +99,8 @@ class VIEW3D_PT_PanelCurvePref(bpy.types.Panel):
         layout.use_property_decorate = False
         col = layout.column(align=True, heading="Insert Only")
         
-        col.prop(context.preferences.edit, "use_keyframe_insert_needed", text="Available")
-        col.prop(context.preferences.edit, "use_keyframe_insert_available", text="Needed")
+        col.prop(context.preferences.edit, "use_keyframe_insert_available", text="Available")
+        col.prop(context.preferences.edit, "use_keyframe_insert_needed", text="Needed")
         col = layout.column(align=True, heading="Show")
         col.prop(context.preferences.edit, "use_anim_channel_group_colors", text="Group")
         col.prop(context.preferences.edit, "show_only_selected_curve_keyframes", text="Selected")
