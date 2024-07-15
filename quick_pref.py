@@ -50,11 +50,9 @@ class VIEW3D_PT_PanelQuickPref(bpy.types.Panel):
         row.prop(context.preferences.inputs, "view_rotate_method", expand = True)
         
         column.operator("view3d.localview_custom", icon = 'OBJECT_HIDDEN', text = 'Local view')
-        
+        column.prop(context.preferences.inputs, "use_mouse_depth_navigate", text="Mouse Depth")
         column.prop(context.preferences.inputs, "use_rotate_around_active")
-        
         column.prop(context.preferences.edit, "use_mouse_depth_cursor")
-        
         column.prop(context.preferences.inputs, "use_mouse_emulate_3_button")
 
 
