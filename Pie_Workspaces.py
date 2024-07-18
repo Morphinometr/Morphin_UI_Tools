@@ -31,7 +31,54 @@ bl_info = {
     }
 
 import bpy
-from bpy.types import Menu
+from bpy.types import Menu, Operator, PropertyGroup
+from bpy.props import StringProperty, EnumProperty
+
+workspaces = [
+    "Layout", "UV Editing"
+]
+
+class m_workspace():
+    direction : EnumProperty
+    workspace_name : StringProperty
+    icon : StringProperty
+    
+
+class MT_Worspaces_prefs(PropertyGroup):
+    workspaces : EnumProperty(
+        items=(
+            ("Left", "", "Layout"),
+            ("Right", "", "Sculpting"),
+            ("Bottom", "", "UV Editing"),
+            ("Top", "", "UV Editing"),
+        )
+    )
+    
+    @property
+    def filtered_icons(self):
+        if self._filtered_icons is None:
+            self._filtered_icons = []
+            icon_filter = self._filter.upper()
+            self.filtered_icons.clear()
+            pr = prefs()
+
+            icons = bpy.types.UILayout.bl_rna.functions[
+                "prop"].parameters["icon"].enum_items.keys()
+            for icon in icons:
+                if icon == 'NONE' or \
+                        icon_filter and icon_filter not in icon or \
+                        not pr.show_brush_icons and "BRUSH_" in icon and \
+                        icon != 'BRUSH_DATA' or \
+                        not pr.show_matcap_icons and "MATCAP_" in icon or \
+                        not pr.show_event_icons and (
+                            "EVENT_" in icon or "MOUSE_" in icon
+                        ) or \
+                        not pr.show_colorset_icons and "COLORSET_" in icon:
+                    continue
+                self._filtered_icons.append(icon)
+
+        return self._filtered_icons
+    
 
 
 # Pie Workspaces
@@ -43,32 +90,34 @@ class PIE_MT_Workspaces(Menu):
         layout = self.layout
         pie = layout.menu_pie()
         # 4 - LEFT
-        pie.operator("class.layout", text="Layout", icon='SCENE_DATA')
-        # 6 - RIGHT
-        pie.operator("class.uvediting", text="UV Editing", icon='UV_DATA')
-        # 2 - BOTTOM
+        pie.operator("morph.workspace", text=workspaces[0], icon='SCENE_DATA').workspace = workspaces[0]
+        # # 6 - RIGHT
+        pie.operator("class.uvediting", text=workspaces[1], icon='UV_DATA')
+        # # 2 - BOTTOM
         pie.operator("class.sculpting", text="Sculpting", icon='SCULPTMODE_HLT')
-        # 8 - TOP
+        # # 8 - TOP
         pie.operator("class.shading", text="Shading", icon='SHADING_RENDERED')
-        # 7 - TOP - LEFT
+        # # 7 - TOP - LEFT
         pie.operator("class.animation", text="Animation", icon='ARMATURE_DATA')
-        # 9 - TOP - RIGHT
+        # # 9 - TOP - RIGHT
         pie.operator("class.txpaint", text="Texture Paint", icon='TPAINT_HLT')
-        # 1 - BOTTOM - LEFT
+        # # 1 - BOTTOM - LEFT
         pie.operator("screen.workspace_cycle", text="Prev", icon='TRIA_LEFT').direction = 'PREV'
-        # 3 - BOTTOM - RIGHT
+        # # 3 - BOTTOM - RIGHT
         pie.operator("screen.workspace_cycle", text="Next", icon='TRIA_RIGHT').direction = 'NEXT'
         
         
-class PIE_OT_Layout(bpy.types.Operator):
-    bl_idname = "class.layout"
-    bl_label = "layout"
+class PIE_OT_workspace(Operator):
+    bl_idname = "morph.workspace"
+    bl_label = "workspace"
+    
+    workspace : StringProperty(name= "")
     
     def execute(self, context):
-        bpy.context.window.workspace = bpy.data.workspaces['Layout']
+        bpy.context.window.workspace = bpy.data.workspaces[self.workspace]
         return {'FINISHED'}
     
-class PIE_OT_Sculpting(bpy.types.Operator):
+class PIE_OT_Sculpting(Operator):
     bl_idname = "class.sculpting"
     bl_label = "sculpting"
     
@@ -76,7 +125,7 @@ class PIE_OT_Sculpting(bpy.types.Operator):
         bpy.context.window.workspace = bpy.data.workspaces['Sculpting']
         return {'FINISHED'}
 
-class PIE_OT_UVEditing(bpy.types.Operator):
+class PIE_OT_UVEditing(Operator):
     bl_idname = "class.uvediting"
     bl_label = "uvediting"
     
@@ -84,7 +133,7 @@ class PIE_OT_UVEditing(bpy.types.Operator):
         bpy.context.window.workspace = bpy.data.workspaces['UV Editing']
         return {'FINISHED'}
 
-class PIE_OT_Shading(bpy.types.Operator):
+class PIE_OT_Shading(Operator):
     bl_idname = "class.shading"
     bl_label = "shading"
     
@@ -92,7 +141,7 @@ class PIE_OT_Shading(bpy.types.Operator):
         bpy.context.window.workspace = bpy.data.workspaces['Shading']
         return {'FINISHED'}
     
-class PIE_OT_Animation(bpy.types.Operator):
+class PIE_OT_Animation(Operator):
     bl_idname = "class.animation"
     bl_label = "animation"
     
@@ -100,7 +149,7 @@ class PIE_OT_Animation(bpy.types.Operator):
         bpy.context.window.workspace = bpy.data.workspaces['Animation']
         return {'FINISHED'}
     
-class PIE_OT_TxPaint(bpy.types.Operator):
+class PIE_OT_TxPaint(Operator):
     bl_idname = "class.txpaint"
     bl_label = "texture paint"
     
@@ -111,8 +160,9 @@ class PIE_OT_TxPaint(bpy.types.Operator):
 
 
 classes = (
+    MT_Worspaces_prefs,
     PIE_MT_Workspaces,
-    PIE_OT_Layout,
+    PIE_OT_workspace,
     PIE_OT_Sculpting,
     PIE_OT_UVEditing,
     PIE_OT_Shading,
