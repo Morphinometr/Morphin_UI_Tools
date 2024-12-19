@@ -72,7 +72,8 @@ class VIEW3D_PT_PanelAnimPref(bpy.types.Panel):
         col = layout.column(align=True, heading="Insert Only")
         
         col.prop(context.preferences.edit, "use_keyframe_insert_available", text="Available")
-        col.prop(context.preferences.edit, "use_keyframe_insert_needed", text="Needed")
+        col.prop(context.preferences.edit, "use_keyframe_insert_needed", text="Needed Manual")
+        col.prop(context.preferences.edit, "use_auto_keyframe_insert_needed", text="Needed Auto")
         col = layout.column(align=True, heading="Show")
         col.prop(context.preferences.edit, "use_anim_channel_group_colors", text="Group")
         
@@ -98,7 +99,8 @@ class VIEW3D_PT_PanelCurvePref(bpy.types.Panel):
         col = layout.column(align=True, heading="Insert Only")
         
         col.prop(context.preferences.edit, "use_keyframe_insert_available", text="Available")
-        col.prop(context.preferences.edit, "use_keyframe_insert_needed", text="Needed")
+        col.prop(context.preferences.edit, "use_keyframe_insert_needed", text="Needed Manual")
+        col.prop(context.preferences.edit, "use_auto_keyframe_insert_needed", text="Needed Auto")
         col = layout.column(align=True, heading="Show")
         col.prop(context.preferences.edit, "use_anim_channel_group_colors", text="Group")
         col.prop(context.preferences.edit, "show_only_selected_curve_keyframes", text="Selected")
