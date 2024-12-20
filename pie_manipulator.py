@@ -28,27 +28,21 @@ bl_info = {
     "category": "3D View"
     }
 
-import typing
 import bpy
-from bpy.types import Context, Menu, Operator
-from bpy.props import EnumProperty, BoolProperty
+from bpy.types import Menu, Operator
+from bpy.props import EnumProperty
 
 
 class PIE_OT_Morph_Manupulators(Operator):
     bl_idname = "morph.manipulator"
     bl_label = "Pie Transform Manipulator"
 
-    extend: BoolProperty(
-        default=False,
-    )
     type: EnumProperty(
         items=(
             ('TRANSLATE', "Move", ""),
             ('ROTATE', "Rotate", ""),
             ('SCALE', "Scale", ""),
-            ('EXTEND_TRANSLATE', "Extend Translate", "" ),
-            ('EXTEND_ROTATE', "Extend Rotate", ""),
-            ('EXTEND_SCALE', "Extend Scale", ""),
+            ('TRANSLATE_ROTATE', "Translate/Rotate", "" ),
         )
     )
 
@@ -62,21 +56,19 @@ class PIE_OT_Morph_Manupulators(Operator):
             "show_gizmo_object_scale",
         )
         attr_t, attr_r, attr_s = attrs
-        attr_index = ('TRANSLATE', 'ROTATE', 'SCALE', 'EXTEND_TRANSLATE', 'EXTEND_ROTATE', 'EXTEND_SCALE').index(self.type)
+        attr_index = ('TRANSLATE', 'ROTATE', 'SCALE', 'TRANSLATE_ROTATE').index(self.type)
         if attr_index > 2:
-            attr_index -= 3
-            self.extend = True
-        else:
-            self.extend = False
+            ...
         
-        attr_active = attrs[attr_index]
+        
+        # attr_active = attrs[attr_index]
 
-        if self.extend:
-            print('extend')
-            setattr(space_data, attr_active, not getattr(space_data, attr_active))
-        else:
-            for attr in attrs:
-                setattr(space_data, attr, attr == attr_active)
+        # if self.extend:
+        #     print('extend')
+        #     setattr(space_data, attr_active, not getattr(space_data, attr_active))
+        # else:
+        #     for attr in attrs:
+        #         setattr(space_data, attr, attr == attr_active)
         return {'FINISHED'}
 
 
@@ -122,7 +114,7 @@ class PIE_MT_Manipulator(Menu):
         }
         current_orientation = context.scene.transform_orientation_slots[1].type
         orientation_icon = orientation_icons[current_orientation]
-        orientation_text = "Orientation " + current_orientation.capitalize()
+        orientation_text = "Manipulator Orientation: " + current_orientation.capitalize()
         
         # 4 - LEFT
         pie.operator("morph.manipulator", text="Rotate", icon='ORIENTATION_GIMBAL').type = 'ROTATE'
@@ -133,11 +125,11 @@ class PIE_MT_Manipulator(Menu):
         # 8 - TOP
         pie.operator("morph.manipulator", text="Translate", icon='EMPTY_ARROWS').type = 'TRANSLATE'
         # 7 - TOP - LEFT
-        pie.operator("morph.manipulator", text="Extend Translate", icon='ORIENTATION_GLOBAL').type = 'EXTEND_TRANSLATE'
+        pie.operator("wm.call_menu_pie", text= "Transform Pivot").name = "VIEW3D_MT_pivot_pie"
         # 9 - TOP - RIGHT
-        pie.operator("morph.manipulator", text="Extend Scale", icon='MOD_PARTICLE_INSTANCE').type = 'EXTEND_SCALE'
+        pie.operator("wm.call_menu_pie", text= "Transform Orientaion").name = "VIEW3D_MT_orientations_pie"
         # 1 - BOTTOM - LEFT
-        pie.operator("morph.manipulator", text="Extend Rotate", icon='GIZMO').type = 'EXTEND_ROTATE'
+        pie.operator("morph.manipulator", text="Translate/Rotate", icon='GIZMO').type = 'TRANSLATE_ROTATE'
         # 3 - BOTTOM - RIGHT
         pie.operator("wm.call_menu_pie", text=orientation_text, icon=orientation_icon).name = "PIE_MT_morph_manipulator_orientation"
 
