@@ -55,20 +55,18 @@ class PIE_OT_Morph_Manupulators(Operator):
             "show_gizmo_object_rotate",
             "show_gizmo_object_scale",
         )
-        attr_t, attr_r, attr_s = attrs
+        
         attr_index = ('TRANSLATE', 'ROTATE', 'SCALE', 'TRANSLATE_ROTATE').index(self.type)
-        if attr_index > 2:
-            ...
-        
-        
-        # attr_active = attrs[attr_index]
+        attrs_active = [False, False, False]
 
-        # if self.extend:
-        #     print('extend')
-        #     setattr(space_data, attr_active, not getattr(space_data, attr_active))
-        # else:
-        #     for attr in attrs:
-        #         setattr(space_data, attr, attr == attr_active)
+        if attr_index < 3:
+            attrs_active[attr_index] = True
+        else:
+            attrs_active = [True, True, False]
+
+        for attr, i in zip(attrs, attrs_active):
+            setattr(space_data, attr, i)
+        
         return {'FINISHED'}
 
 
