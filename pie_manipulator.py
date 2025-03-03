@@ -20,7 +20,7 @@ bl_info = {
     "name": "Pie Manipulator",
     "description": "Transform Manipulator Menu",
     "author": "pitiwazou, meta-androcto, Morphin",
-    "version": (0, 0, 1),
+    "version": (0, 1, 0),
     "blender": (2, 80, 0),
     "loacation": "PIE_MT_texture_paint_brushes",
     "warning": "",
@@ -87,8 +87,8 @@ class PIE_MT_morph_manipulator_orientation(Menu):
         layout = self.layout
         pie = layout.menu_pie()
         
-        pie.operator("morph.manipulator_default", text="Default", icon='OBJECT_ORIGIN')
         pie.prop(context.scene.transform_orientation_slots[1], "type", expand=True)
+        pie.operator("morph.manipulator_default", text="Default", icon='OBJECT_ORIGIN')
 
 
 # Pie Manipulators
@@ -110,10 +110,26 @@ class PIE_MT_Manipulator(Menu):
             'CURSOR': 'ORIENTATION_CURSOR',
             'PARENT': 'ORIENTATION_PARENT'
         }
-        current_orientation = context.scene.transform_orientation_slots[1].type
-        orientation_icon = orientation_icons[current_orientation]
-        orientation_text = "Manipulator Orientation: " + current_orientation.capitalize()
+        transform_pivots = {
+            'BOUNDING_BOX_CENTER': 'PIVOT_BOUNDBOX',
+            'CURSOR': 'PIVOT_CURSOR',
+            'INDIVIDUAL_ORIGINS': 'PIVOT_INDIVIDUAL',
+            'MEDIAN_POINT': 'PIVOT_MEDIAN',
+            'ACTIVE_ELEMENT': 'PIVOT_ACTIVE'
+        }
+
+        gizmo_current_orientation = context.scene.transform_orientation_slots[1].type
+        gizmo_orientation_icon = orientation_icons[gizmo_current_orientation]
+        gizmo_orientation_text = "Gizmo Orientation: " + gizmo_current_orientation.capitalize()
         
+        transform_orientation = context.scene.transform_orientation_slots[0].type
+        transform_orientation_icon = orientation_icons[transform_orientation]
+        transform_orientation_text = "Transform Orientation: " + transform_orientation.capitalize()
+
+        transform_pivot = context.scene.tool_settings.transform_pivot_point
+        transform_pivot_icon = transform_pivots[transform_pivot]
+        transform_pivot_text = "Transform Pivot: " + transform_pivot.replace('_', ' ').title()
+
         # 4 - LEFT
         pie.operator("morph.manipulator", text="Rotate", icon='ORIENTATION_GIMBAL').type = 'ROTATE'
         # 6 - RIGHT
@@ -123,13 +139,13 @@ class PIE_MT_Manipulator(Menu):
         # 8 - TOP
         pie.operator("morph.manipulator", text="Translate", icon='EMPTY_ARROWS').type = 'TRANSLATE'
         # 7 - TOP - LEFT
-        pie.operator("wm.call_menu_pie", text= "Transform Pivot").name = "VIEW3D_MT_pivot_pie"
+        pie.operator("wm.call_menu_pie", text=transform_pivot_text, icon=transform_pivot_icon).name = "VIEW3D_MT_pivot_pie"
         # 9 - TOP - RIGHT
-        pie.operator("wm.call_menu_pie", text= "Transform Orientaion").name = "VIEW3D_MT_orientations_pie"
+        pie.operator("wm.call_menu_pie", text=transform_orientation_text, icon=transform_orientation_icon).name = "VIEW3D_MT_orientations_pie"
         # 1 - BOTTOM - LEFT
         pie.operator("morph.manipulator", text="Translate/Rotate", icon='GIZMO').type = 'TRANSLATE_ROTATE'
         # 3 - BOTTOM - RIGHT
-        pie.operator("wm.call_menu_pie", text=orientation_text, icon=orientation_icon).name = "PIE_MT_morph_manipulator_orientation"
+        pie.operator("wm.call_menu_pie", text=gizmo_orientation_text, icon=gizmo_orientation_icon).name = "PIE_MT_morph_manipulator_orientation"
 
 classes = (
     PIE_OT_Morph_Manupulators,
