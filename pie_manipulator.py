@@ -64,8 +64,8 @@ class PIE_OT_Morph_Manupulators(Operator):
         else:
             attrs_active = [True, True, False]
 
-        for attr, i in zip(attrs, attrs_active):
-            setattr(space_data, attr, i)
+        for attr, state in zip(attrs, attrs_active):
+            setattr(space_data, attr, state)
         
         return {'FINISHED'}
 
