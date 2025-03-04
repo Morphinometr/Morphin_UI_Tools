@@ -30,7 +30,7 @@ bl_info = {
 
 import bpy
 from bpy.types import Menu, Operator
-from bpy.props import EnumProperty
+from bpy.props import EnumProperty, BoolProperty
 
 
 class PIE_OT_Morph_Manupulators(Operator):
@@ -46,6 +46,12 @@ class PIE_OT_Morph_Manupulators(Operator):
         )
     )
 
+    extend: BoolProperty(name='Extend')
+
+    def invoke(self, context, event):
+        self.extend = event.shift
+        return self.execute(context)
+
     def execute(self, context):
         space_data = context.space_data
         space_data.show_gizmo_context = True
@@ -57,8 +63,14 @@ class PIE_OT_Morph_Manupulators(Operator):
         )
         
         attr_index = ('TRANSLATE', 'ROTATE', 'SCALE', 'TRANSLATE_ROTATE').index(self.type)
-        attrs_active = [False, False, False]
 
+        if self.extend and attr_index < 3:
+            attr_active = attrs[attr_index]
+            setattr(space_data, attr_active, not getattr(space_data, attr_active))
+            return {'FINISHED'}
+        
+        attrs_active = [False, False, False]
+        
         if attr_index < 3:
             attrs_active[attr_index] = True
         else:
