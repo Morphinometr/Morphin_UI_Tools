@@ -32,8 +32,8 @@ import bpy
 from bpy.types import Menu
 
 
-class PIE_OT_Morph_view_options(Menu):
-    bl_idname = "morph.view_options"
+class PIE_MT_morph_view_options(Menu):
+    bl_idname = "PIE_MT_morph_view_options"
     bl_label = "View Options"
     
     def draw(self, context):
@@ -80,12 +80,12 @@ class PIE_MT_ViewNumpad(Menu):
         # 1 - BOTTOM - LEFT
         pie.operator("view3d.localview", text="Local/Global", icon='RESTRICT_VIEW_ON').frame_selected=False
         # 3 - BOTTOM - RIGHT
-        pie.operator("wm.call_menu_pie", text= 'View Options', icon='RESTRICT_VIEW_OFF').name = "morph.view_options"
+        pie.operator("wm.call_menu_pie", text= 'View Options', icon='RESTRICT_VIEW_OFF').name = "PIE_MT_morph_view_options"
         
 
 classes = (
     PIE_MT_ViewNumpad,
-    PIE_OT_Morph_view_options,
+    PIE_MT_morph_view_options,
     
     )
 
