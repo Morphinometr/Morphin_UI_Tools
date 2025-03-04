@@ -20,7 +20,7 @@ bl_info = {
     "name": "Pie Views",
     "description": "Viewport Numpad Menu",
     "author": "Morphin",
-    "version": (0, 0, 2),
+    "version": (0, 1, 0),
     "blender": (2, 80, 0),
     "location": "PIE_MT_viewnumpad",
     "warning": "",
@@ -32,16 +32,38 @@ import bpy
 from bpy.types import Menu
 
 
+class PIE_OT_Morph_view_options(Menu):
+    bl_idname = "morph.view_options"
+    bl_label = "View Options"
+    
+    def draw(self, context):
+        pie = self.layout.menu_pie()
+
+        # 4 - LEFT
+        pie.operator("view3d.view_selected", text="Selected", icon='VIS_SEL_11')
+        # 6 - RIGHT
+        pie.operator("view3d.view_all", text="All", icon='STICKY_UVS_DISABLE')
+        # 2 - BOTTOM
+        pie.operator("view3d.view_camera", text="View Cam", icon='VIEW_CAMERA')
+        # 8 - TOP
+        pie.operator("view3d.camera_to_view", text="Cam To View", icon='HIDE_OFF')
+        # 7 - TOP - LEFT
+        pie.prop(context.scene.render, "use_border", text="Border", icon='SELECT_SET')
+        # 9 - TOP - RIGHT
+        pie.prop(context.space_data, "lock_camera", text="Lock Camera", icon='VIEW_LOCKED')
+        # 1 - BOTTOM - LEFT
+        pie.operator("view3d.object_as_camera", text="Make Active", icon='OUTLINER_DATA_CAMERA')
+        # 3 - BOTTOM - RIGHT
+        pie.operator("view3d.view_persportho", text="Persp/Ortho", icon='VIEW_PERSPECTIVE')
+        
+
 # Pie views numpad
 class PIE_MT_ViewNumpad(Menu):
     bl_idname = "PIE_MT_viewnumpad"
     bl_label = "Pie Views Menu"
 
     def draw(self, context):
-        layout = self.layout
-        pie = layout.menu_pie()
-        scene = context.scene
-        rd = scene.render
+        pie = self.layout.menu_pie()
 
         # 4 - LEFT
         pie.operator("view3d.view_axis", text="Left", icon='TRIA_LEFT').type = 'LEFT'
@@ -58,46 +80,12 @@ class PIE_MT_ViewNumpad(Menu):
         # 1 - BOTTOM - LEFT
         pie.operator("view3d.localview", text="Local/Global", icon='RESTRICT_VIEW_ON').frame_selected=False
         # 3 - BOTTOM - RIGHT
-        pie.operator("view3d.view_selected", text="Selected", icon='VIS_SEL_11')
-        # LEFT EXTRA
-        pie.separator()
-        # RIGHT EXTRA
-        pie.separator()
-        # BOTTOM EXTRA
-        other = pie.column()
-        gap = other.column()
-        gap.separator()
-        gap.scale_y = 7
-        other.scale_y=1.2
-        other.scale_x=1.2
-        
-        box = other.grid_flow(columns=2, align=True, even_columns=True, even_rows=True, row_major=True)
-                        
-        #row
-        box.operator("view3d.view_camera", text="View Cam", icon='VIEW_CAMERA')
-        box.operator("view3d.camera_to_view", text="Cam To View", icon='HIDE_OFF')
-        
-        #row
-        box.operator("view3d.view_all", text="View All", icon='SHADING_BBOX').center = True
-        box.operator("view3d.view_persportho", text="Persp/Ortho", icon='VIEW_PERSPECTIVE')
-         
-        #row
-        box.operator("view3d.object_as_camera", text="Make Active", icon='OUTLINER_DATA_CAMERA')
-        box.operator("screen.screen_full_area", text="Toggle Full", icon='IMAGE_BACKGROUND')
-        
-        #row
-        box.prop(rd, "use_border", text="Border")
-        if context.space_data.lock_camera is False:
-            box.operator("wm.context_toggle", text="Lock Cam",
-                         icon='LOCKED').data_path = "space_data.lock_camera"
-        elif context.space_data.lock_camera is True:
-            box.operator("wm.context_toggle", text="Unlock Cam",
-                         icon='UNLOCKED').data_path = "space_data.lock_camera"
-        
+        pie.operator("wm.call_menu_pie", text= 'View Options', icon='RESTRICT_VIEW_OFF').name = "morph.view_options"
         
 
 classes = (
     PIE_MT_ViewNumpad,
+    PIE_OT_Morph_view_options,
     
     )
 
