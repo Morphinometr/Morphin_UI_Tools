@@ -30,7 +30,7 @@ bl_info = {
 
 import bpy
 from bpy.types import Menu, Operator
-from bpy.props import EnumProperty, BoolProperty
+from bpy.props import EnumProperty
 
 
 class PIE_OT_Morph_Manupulators(Operator):
@@ -46,7 +46,7 @@ class PIE_OT_Morph_Manupulators(Operator):
         )
     )
 
-    extend: BoolProperty(name='Extend')
+    extend = False
 
     def invoke(self, context, event):
         self.extend = event.shift
