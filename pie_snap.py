@@ -55,23 +55,31 @@ class PIE_MT_3DSnap(Menu):
     def draw(self, context):
         layout = self.layout
         pie = layout.menu_pie()
-        
+
         # 4 - LEFT
-        pie.operator("snap3d.increment", icon='SNAP_INCREMENT')
+        on = True if 'INCREMENT' in context.scene.tool_settings.snap_elements_base else False
+        pie.operator("snap3d.increment", icon='SNAP_INCREMENT', depress=on)
         # 6 - RIGHT
-        pie.operator("snap3d.vertex", icon='SNAP_VERTEX')
+        on = True if 'VERTEX' in context.scene.tool_settings.snap_elements_base else False
+        pie.operator("snap3d.vertex", icon='SNAP_VERTEX', depress=on)
         # 2 - BOTTOM
-        pie.operator("snap3d.face", icon='SNAP_FACE')
+        on = True if 'FACE' in context.scene.tool_settings.snap_elements_base else False
+        pie.operator("snap3d.face", icon='SNAP_FACE', depress=on)
         # 8 - TOP
-        pie.operator("snap3d.edge", icon='SNAP_EDGE')
+        on = True if 'EDGE' in context.scene.tool_settings.snap_elements_base else False
+        pie.operator("snap3d.edge", icon='SNAP_EDGE', depress=on)
         # 7 - TOP - LEFT
-        pie.operator("snap3d.grid", icon='SNAP_GRID')
+        on = True if 'GRID' in context.scene.tool_settings.snap_elements_base else False
+        pie.operator("snap3d.grid", icon='SNAP_GRID', depress=on)
         # 9 - TOP - RIGHT
-        pie.operator("snap3d.volume", icon='SNAP_VOLUME')
+        on = True if 'VOLUME' in context.scene.tool_settings.snap_elements_base else False
+        pie.operator("snap3d.volume", icon='SNAP_VOLUME', depress=on)
         # 1 - BOTTOM - LEFT
-        pie.operator("snap3d.edge_center", icon='SNAP_MIDPOINT')
+        on = True if 'EDGE_MIDPOINT' in context.scene.tool_settings.snap_elements_base else False
+        pie.operator("snap3d.edge_center", icon='SNAP_MIDPOINT', depress=on)
         # 3 - BOTTOM - RIGHT
-        pie.operator("snap3d.edge_perpendicular", icon='SNAP_PERPENDICULAR')
+        on = True if 'EDGE_PERPENDICULAR' in context.scene.tool_settings.snap_elements_base else False
+        pie.operator("snap3d.edge_perpendicular", icon='SNAP_PERPENDICULAR', depress=on)
        
 class PIE_MT_2DSnap(Menu):
     bl_idname = "PIE_MT_2DSnap"
