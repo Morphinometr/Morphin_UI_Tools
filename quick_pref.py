@@ -54,6 +54,7 @@ class VIEW3D_PT_PanelQuickPref(bpy.types.Panel):
         column.prop(context.preferences.inputs, "use_rotate_around_active")
         column.prop(context.preferences.edit, "use_mouse_depth_cursor")
         column.prop(context.preferences.inputs, "use_mouse_emulate_3_button")
+        column.prop(context.preferences.inputs, "use_numeric_input_advanced")
 
 
 class VIEW3D_PT_PanelAnimPref(bpy.types.Panel):
