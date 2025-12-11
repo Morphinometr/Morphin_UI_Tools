@@ -29,7 +29,8 @@ bl_info = {
     }
 
 import bpy
-from bpy.types import Menu
+from bpy.types import Menu, Operator
+from bpy.props import EnumProperty, BoolProperty
         
 
 def get_pixel_snap_mode ():
@@ -56,30 +57,21 @@ class PIE_MT_3DSnap(Menu):
         layout = self.layout
         pie = layout.menu_pie()
 
-        # 4 - LEFT
-        on = 'INCREMENT' in context.scene.tool_settings.snap_elements_base 
-        pie.operator("snap3d.increment", icon='SNAP_INCREMENT', depress=on)
-        # 6 - RIGHT
-        on = 'VERTEX' in context.scene.tool_settings.snap_elements_base 
-        pie.operator("snap3d.vertex", icon='SNAP_VERTEX', depress=on)
-        # 2 - BOTTOM
-        on = 'FACE' in context.scene.tool_settings.snap_elements_base
-        pie.operator("snap3d.face", icon='SNAP_FACE', depress=on)
-        # 8 - TOP
-        on = 'EDGE' in context.scene.tool_settings.snap_elements_base
-        pie.operator("snap3d.edge", icon='SNAP_EDGE', depress=on)
-        # 7 - TOP - LEFT
-        on = 'GRID' in context.scene.tool_settings.snap_elements_base
-        pie.operator("snap3d.grid", icon='SNAP_GRID', depress=on)
-        # 9 - TOP - RIGHT
-        on = 'VOLUME' in context.scene.tool_settings.snap_elements_base
-        pie.operator("snap3d.volume", icon='SNAP_VOLUME', depress=on)
-        # 1 - BOTTOM - LEFT
-        on = 'EDGE_MIDPOINT' in context.scene.tool_settings.snap_elements_base
-        pie.operator("snap3d.edge_center", icon='SNAP_MIDPOINT', depress=on)
-        # 3 - BOTTOM - RIGHT
-        on = 'EDGE_PERPENDICULAR' in context.scene.tool_settings.snap_elements_base
-        pie.operator("snap3d.edge_perpendicular", icon='SNAP_PERPENDICULAR', depress=on)
+        types = [
+            ('INCREMENT', 'Increment', 'SNAP_INCREMENT'),
+            ('VERTEX', 'Vertex', 'SNAP_VERTEX'),
+            ('FACE', 'Face', 'SNAP_FACE'),
+            ('EDGE', 'Edge', 'SNAP_EDGE'),
+            ('GRID', 'Grid', 'SNAP_GRID'),
+            ('VOLUME', 'Volume', 'SNAP_VOLUME'),
+            ('EDGE_MIDPOINT', 'Midpoint', 'SNAP_MIDPOINT'),
+            ('EDGE_PERPENDICULAR', 'Perpendicular', 'SNAP_PERPENDICULAR'),
+        ]
+
+        for type in types:
+            on = type[0] in context.scene.tool_settings.snap_elements_base
+            pie.operator("morph.snap3d", text=type[1], icon=type[2], depress=on).type = type[0]
+
        
 class PIE_MT_2DSnap(Menu):
     bl_idname = "PIE_MT_2DSnap"
@@ -89,10 +81,18 @@ class PIE_MT_2DSnap(Menu):
         layout = self.layout
         pie = layout.menu_pie()
         
+        types = [
+            ('INCREMENT', 'Increment', 'SNAP_INCREMENT'),
+            ('VERTEX', 'Vertex', 'SNAP_VERTEX'),
+            ('GRID', 'Grid', 'SNAP_GRID'),
+        ]
+
         # 4 - LEFT
-        pie.operator("snap2d.increment", icon='SNAP_INCREMENT')
+        on = 'INCREMENT' in context.tool_settings.snap_uv_element
+        pie.operator("morph.snap2d", text="Increment", icon='SNAP_INCREMENT', depress=on).type = 'INCREMENT'
         # 6 - RIGHT
-        pie.operator("snap2d.vertex", icon='SNAP_VERTEX')
+        on = 'VERTEX' in context.tool_settings.snap_uv_element
+        pie.operator("morph.snap2d", text="Vertex", icon='SNAP_VERTEX', depress=on).type = 'VERTEX'
         # 2 - BOTTOM
         if get_pixel_snap_mode() == "CORNER":
             pie.operator("snap2d.corner", icon='CHECKBOX_HLT')
@@ -101,7 +101,8 @@ class PIE_MT_2DSnap(Menu):
         # 8 - TOP
         pie.operator("snap2d.flip_y", icon='SORT_DESC')
         # 7 - TOP - LEFT
-        pie.operator("snap2d.grid", icon='SNAP_GRID')
+        on = 'GRID' in context.tool_settings.snap_uv_element
+        pie.operator("morph.snap2d", text="Grid", icon='SNAP_GRID', depress=on).type = 'GRID'
         # 9 - TOP - RIGHT
         pie.operator("snap2d.flip_x", icon='FORWARD')
         # 1 - BOTTOM - LEFT
@@ -115,113 +116,77 @@ class PIE_MT_2DSnap(Menu):
         else: 
             pie.operator("snap2d.disabled",icon='CHECKBOX_DEHLT')
 
-#3D View classes
 
-class PIE_OT_3DIncrement(bpy.types.Operator):
-    bl_idname = "snap3d.increment"
-    bl_label = "Increment"
+class PIE_OP_3DSnap(Operator):
+    bl_idname = "morph.snap3d"
+    bl_label = "Snap 3D"
     
-    def execute(self, context):
-        bpy.context.tool_settings.snap_elements = {'INCREMENT'}
-        bpy.context.tool_settings.use_snap_grid_absolute = False
-        return {'FINISHED'}
-    
-class PIE_OT_3DGrid(bpy.types.Operator):
-    bl_idname = "snap3d.grid"
-    bl_label = "Grid"
-    
-    def execute(self, context):
-        bpy.context.tool_settings.snap_elements = {'INCREMENT'}
-        bpy.context.tool_settings.use_snap_grid_absolute = True
-        return {'FINISHED'}
+    toggle : BoolProperty(
+        name="Toggle",
+        default=False
+    )
 
-class PIE_OT_3DVertex(bpy.types.Operator):
-    bl_idname = "snap3d.vertex"
-    bl_label = "Vertex"
-    
-    def execute(self, context):
-        bpy.context.tool_settings.snap_elements = {'VERTEX'}
-        return {'FINISHED'}
+    type : EnumProperty(
+        name="Type",
+        items=[
+            ('INCREMENT', 'Increment', ''),
+            ('GRID', 'Grid', ''),
+            ('VERTEX', 'Vertex', ''),
+            ('EDGE', 'Edge', ''),
+            ('FACE', 'Face', ''),
+            ('VOLUME', 'Volume', ''),
+            ('EDGE_MIDPOINT', 'Midpoint', ''),
+            ('EDGE_PERPENDICULAR', 'Perpendicular', ''),
+        ]
+    )
 
-class PIE_OT_3DFace(bpy.types.Operator):
-    bl_idname = "snap3d.face"
-    bl_label = "Face"
-    
-    def execute(self, context):
-        bpy.context.tool_settings.snap_elements = {'FACE'}
-        return {'FINISHED'}
+    def invoke(self, context, event):
+        self.toggle = event.shift
+        return self.execute(context)
 
-class PIE_OT_3DEdge(bpy.types.Operator):
-    bl_idname = "snap3d.edge"
-    bl_label = "Edge"
-    
     def execute(self, context):
-        bpy.context.tool_settings.snap_elements = {'EDGE'}
-        return {'FINISHED'}
-
-class PIE_OT_3DEdgeCenter(bpy.types.Operator):
-    bl_idname = "snap3d.edge_center"
-    bl_label = "Edge center"
-    
-    def execute(self, context):
-        bpy.context.tool_settings.snap_elements = {'EDGE_MIDPOINT'}
-        return {'FINISHED'}
-    
-class PIE_OT_3DEdgePerpendicular(bpy.types.Operator):
-    bl_idname = "snap3d.edge_perpendicular"
-    bl_label = "Edge perpendicular"
-    
-    def execute(self, context):
-        bpy.context.tool_settings.snap_elements = {'EDGE_PERPENDICULAR'}
-        return {'FINISHED'}
-    
-class PIE_OT_3DVolume(bpy.types.Operator):
-    bl_idname = "snap3d.volume"
-    bl_label = "Volume"
-    
-    def execute(self, context):
-        bpy.context.tool_settings.snap_elements = {'VOLUME'}
-        return {'FINISHED'}
-
-#2D View classes
-
-class PIE_OT_2DIncrement(bpy.types.Operator):
-    bl_idname = "snap2d.increment"
-    bl_label = "Increment"
-    bl_description = "Set snaping to grid increments. Custom grid can be set in overlays"
-    
-    def execute(self, context):
-        if bpy.app.version < (4, 2, 0):
-            bpy.context.tool_settings.snap_uv_element = 'INCREMENT'
-            bpy.context.tool_settings.use_snap_uv_grid_absolute = False
+        settings = context.tool_settings
+        if self.toggle:
+            settings.snap_elements ^= {self.type}
         else:
-            bpy.context.tool_settings.snap_uv_element = {'INCREMENT'}
+            settings.snap_elements = {self.type}
+        
+        if self.type == 'INCREMENT':
+            settings.use_snap_grid_absolute = False
         return {'FINISHED'}
 
-class PIE_OT_2DGrid(bpy.types.Operator):
-    bl_idname = "snap2d.grid"
-    bl_label = "Grid"
-    bl_description = "Set snaping to grid points. Custom grid can be set in overlays"
+class PIE_OP_2DSnap(Operator):
+    bl_idname = "morph.snap2d"
+    bl_label = "Snap 2D"
     
+    toggle : BoolProperty(
+        name="Toggle",
+        default=False
+    )
+
+    type : EnumProperty(
+        name="Type",
+        items=[
+            ('INCREMENT', 'Increment', ''),
+            ('GRID', 'Grid', ''),
+            ('VERTEX', 'Vertex', ''),
+        ]
+    )
+
+    def invoke(self, context, event):
+        self.toggle = event.shift
+        return self.execute(context)
+
     def execute(self, context):
-        if bpy.app.version < (4, 2, 0):
-            bpy.context.tool_settings.snap_uv_element = 'INCREMENT'
-            bpy.context.tool_settings.use_snap_uv_grid_absolute = True
+        settings = context.tool_settings
+        if self.toggle:
+            settings.snap_uv_element ^= {self.type}
         else:
-            bpy.context.tool_settings.snap_uv_element = {'GRID'}
+            settings.snap_uv_element = {self.type}
+        
+
         return {'FINISHED'}
-    
-class PIE_OT_2DVertex(bpy.types.Operator):
-    bl_idname = "snap2d.vertex"
-    bl_label = "Vertex"
-    bl_description = "Set snaping to UV vertices"
-    
-    def execute(self, context):
-        if bpy.app.version < (4, 2, 0):
-            bpy.context.tool_settings.snap_uv_element = 'VERTEX'
-        else:
-            bpy.context.tool_settings.snap_uv_element = {'VERTEX'}
-        return {'FINISHED'}
+
 
 class PIE_OT_2DCorner(bpy.types.Operator):
     bl_idname = "snap2d.corner"
@@ -273,17 +238,8 @@ class PIE_OT_2DFlipY(bpy.types.Operator):
 classes = (
     PIE_MT_3DSnap,
     PIE_MT_2DSnap,
-    PIE_OT_3DIncrement,
-    PIE_OT_3DVertex,
-    PIE_OT_3DFace,
-    PIE_OT_3DGrid,
-    PIE_OT_3DEdge,
-    PIE_OT_3DEdgeCenter,
-    PIE_OT_3DEdgePerpendicular,
-    PIE_OT_3DVolume,
-    PIE_OT_2DIncrement,
-    PIE_OT_2DGrid,
-    PIE_OT_2DVertex,
+    PIE_OP_3DSnap,
+    PIE_OP_2DSnap,
     PIE_OT_2DCorner,
     PIE_OT_2DCenter,
     PIE_OT_2DDisabled,
