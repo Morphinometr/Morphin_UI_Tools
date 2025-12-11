@@ -135,7 +135,10 @@ class PIE_MT_Manipulator(Menu):
         gizmo_orientation_text = "Gizmo Orientation: " + gizmo_current_orientation.capitalize()
         
         transform_orientation = context.scene.transform_orientation_slots[0].type
-        transform_orientation_icon = orientation_icons[transform_orientation]
+        try:
+            transform_orientation_icon = orientation_icons[transform_orientation]
+        except KeyError:
+            transform_orientation_icon = "OBJECT_ORIGIN"
         transform_orientation_text = "Transform Orientation: " + transform_orientation.capitalize()
 
         transform_pivot = context.scene.tool_settings.transform_pivot_point
