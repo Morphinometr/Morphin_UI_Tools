@@ -183,8 +183,11 @@ class PIE_OT_2DIncrement(bpy.types.Operator):
     bl_description = "Set snaping to grid increments. Custom grid can be set in overlays"
     
     def execute(self, context):
-        bpy.context.tool_settings.snap_uv_element = 'INCREMENT'
-        bpy.context.tool_settings.use_snap_uv_grid_absolute = False
+        if bpy.app.version < (4, 2, 0):
+            bpy.context.tool_settings.snap_uv_element = 'INCREMENT'
+            bpy.context.tool_settings.use_snap_uv_grid_absolute = False
+        else:
+            bpy.context.tool_settings.snap_uv_element = {'INCREMENT'}
         return {'FINISHED'}
 
 class PIE_OT_2DGrid(bpy.types.Operator):
@@ -193,8 +196,11 @@ class PIE_OT_2DGrid(bpy.types.Operator):
     bl_description = "Set snaping to grid points. Custom grid can be set in overlays"
     
     def execute(self, context):
-        bpy.context.tool_settings.snap_uv_element = 'INCREMENT'
-        bpy.context.tool_settings.use_snap_uv_grid_absolute = True
+        if bpy.app.version < (4, 2, 0):
+            bpy.context.tool_settings.snap_uv_element = 'INCREMENT'
+            bpy.context.tool_settings.use_snap_uv_grid_absolute = True
+        else:
+            bpy.context.tool_settings.snap_uv_element = {'GRID'}
         return {'FINISHED'}
     
 class PIE_OT_2DVertex(bpy.types.Operator):
@@ -203,7 +209,10 @@ class PIE_OT_2DVertex(bpy.types.Operator):
     bl_description = "Set snaping to UV vertices"
     
     def execute(self, context):
-        bpy.context.tool_settings.snap_uv_element = 'VERTEX'
+        if bpy.app.version < (4, 2, 0):
+            bpy.context.tool_settings.snap_uv_element = 'VERTEX'
+        else:
+            bpy.context.tool_settings.snap_uv_element = {'VERTEX'}
         return {'FINISHED'}
 
 class PIE_OT_2DCorner(bpy.types.Operator):
