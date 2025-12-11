@@ -49,7 +49,8 @@ sub_modules_names = (
     "pie_snap",
     "pie_view_numpad",
     "pie_brushes",
-    "pie_manipulator"
+    "pie_manipulator",
+    "mesh_delete"
     
     )
 
