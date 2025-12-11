@@ -41,7 +41,7 @@ class VIEW3D_OT_delete_mesh(bpy.types.Operator):
         return context.object and context.object.mode == "EDIT"
         
     def execute(self, context):
-        mode = bpy.context.tool_settings.mesh_select_mode
+        mode = context.tool_settings.mesh_select_mode
         if sum(tuple(mode)) > 1:
             bpy.ops.wm.call_menu(name="VIEW3D_MT_edit_mesh_delete")
         elif mode[0]:

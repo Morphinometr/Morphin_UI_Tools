@@ -50,8 +50,8 @@ sub_modules_names = (
     "pie_view_numpad",
     "pie_brushes",
     "pie_manipulator",
-    "mesh_delete"
-    
+    "mesh_delete",
+    "uv_select_mode",
     )
 
 
