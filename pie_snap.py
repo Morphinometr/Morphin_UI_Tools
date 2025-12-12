@@ -56,22 +56,26 @@ class PIE_MT_3DSnap(Menu):
     def draw(self, context):
         layout = self.layout
         pie = layout.menu_pie()
+        settings = context.tool_settings
 
         types = [
-            ('INCREMENT', 'Increment', 'SNAP_INCREMENT'),
-            ('VERTEX', 'Vertex', 'SNAP_VERTEX'),
-            ('FACE', 'Face', 'SNAP_FACE'),
-            ('EDGE', 'Edge', 'SNAP_EDGE'),
-            ('GRID', 'Grid', 'SNAP_GRID'),
-            ('VOLUME', 'Volume', 'SNAP_VOLUME'),
-            ('EDGE_MIDPOINT', 'Midpoint', 'SNAP_MIDPOINT'),
-            ('EDGE_PERPENDICULAR', 'Perpendicular', 'SNAP_PERPENDICULAR'),
+            ("INCREMENT", "Increment", "SNAP_INCREMENT", settings.snap_elements_base),
+            ("VERTEX", "Vertex", "SNAP_VERTEX", settings.snap_elements_base),
+            ("FACE", "Face", "SNAP_FACE", settings.snap_elements_base),
+            ("EDGE", "Edge", "SNAP_EDGE", settings.snap_elements_base),
+            ("GRID", "Grid", "SNAP_GRID", settings.snap_elements_base),
+            # ("VOLUME", "Volume", "SNAP_VOLUME", settings.snap_elements_base),
+            ("FACE_PROJECT", "Face Project", "SNAP_FACE_CENTER", settings.snap_elements_individual),
+            ("EDGE_MIDPOINT", "Midpoint", "SNAP_MIDPOINT", settings.snap_elements_base),
+            # ("EDGE_PERPENDICULAR", "Perpendicular", "SNAP_PERPENDICULAR", settings.snap_elements_base),
         ]
 
         for type in types:
-            on = type[0] in context.scene.tool_settings.snap_elements_base
+            on = type[0] in type[3]
             pie.operator("morph.snap3d", text=type[1], icon=type[2], depress=on).type = type[0]
-
+        
+        
+        pie.operator("wm.call_panel", text= "Snap Options", icon="KEY_MENU").name = "VIEW3D_PT_snapping"
        
 class PIE_MT_2DSnap(Menu):
     bl_idname = "PIE_MT_2DSnap"
@@ -82,39 +86,39 @@ class PIE_MT_2DSnap(Menu):
         pie = layout.menu_pie()
         
         types = [
-            ('INCREMENT', 'Increment', 'SNAP_INCREMENT'),
-            ('VERTEX', 'Vertex', 'SNAP_VERTEX'),
-            ('GRID', 'Grid', 'SNAP_GRID'),
+            ("INCREMENT", "Increment", "SNAP_INCREMENT"),
+            ("VERTEX", "Vertex", "SNAP_VERTEX"),
+            ("GRID", "Grid", "SNAP_GRID"),
         ]
 
         # 4 - LEFT
-        on = 'INCREMENT' in context.tool_settings.snap_uv_element
-        pie.operator("morph.snap2d", text="Increment", icon='SNAP_INCREMENT', depress=on).type = 'INCREMENT'
+        on = "INCREMENT" in context.tool_settings.snap_uv_element
+        pie.operator("morph.snap2d", text="Increment", icon="SNAP_INCREMENT", depress=on).type = "INCREMENT"
         # 6 - RIGHT
-        on = 'VERTEX' in context.tool_settings.snap_uv_element
-        pie.operator("morph.snap2d", text="Vertex", icon='SNAP_VERTEX', depress=on).type = 'VERTEX'
+        on = "VERTEX" in context.tool_settings.snap_uv_element
+        pie.operator("morph.snap2d", text="Vertex", icon="SNAP_VERTEX", depress=on).type = "VERTEX"
         # 2 - BOTTOM
         if get_pixel_snap_mode() == "CORNER":
-            pie.operator("snap2d.corner", icon='CHECKBOX_HLT')
+            pie.operator("snap2d.corner", icon="CHECKBOX_HLT")
         else: 
-            pie.operator("snap2d.corner",icon='CHECKBOX_DEHLT')
+            pie.operator("snap2d.corner",icon="CHECKBOX_DEHLT")
         # 8 - TOP
-        pie.operator("snap2d.flip_y", icon='SORT_DESC')
+        pie.operator("snap2d.flip_y", icon="SORT_DESC")
         # 7 - TOP - LEFT
-        on = 'GRID' in context.tool_settings.snap_uv_element
-        pie.operator("morph.snap2d", text="Grid", icon='SNAP_GRID', depress=on).type = 'GRID'
+        on = "GRID" in context.tool_settings.snap_uv_element
+        pie.operator("morph.snap2d", text="Grid", icon="SNAP_GRID", depress=on).type = "GRID"
         # 9 - TOP - RIGHT
-        pie.operator("snap2d.flip_x", icon='FORWARD')
+        pie.operator("snap2d.flip_x", icon="FORWARD")
         # 1 - BOTTOM - LEFT
         if get_pixel_snap_mode() == "CENTER":
-            pie.operator("snap2d.center", icon='CHECKBOX_HLT')
+            pie.operator("snap2d.center", icon="CHECKBOX_HLT")
         else: 
-            pie.operator("snap2d.center",icon='CHECKBOX_DEHLT')
+            pie.operator("snap2d.center",icon="CHECKBOX_DEHLT")
         # 3 - BOTTOM - RIGHT
         if get_pixel_snap_mode() == "DISABLED":
-            pie.operator("snap2d.disabled", icon='CHECKBOX_HLT')
+            pie.operator("snap2d.disabled", icon="CHECKBOX_HLT")
         else: 
-            pie.operator("snap2d.disabled",icon='CHECKBOX_DEHLT')
+            pie.operator("snap2d.disabled",icon="CHECKBOX_DEHLT")
 
 
 class PIE_OP_3DSnap(Operator):
@@ -129,14 +133,15 @@ class PIE_OP_3DSnap(Operator):
     type : EnumProperty(
         name="Type",
         items=[
-            ('INCREMENT', 'Increment', ''),
-            ('GRID', 'Grid', ''),
-            ('VERTEX', 'Vertex', ''),
-            ('EDGE', 'Edge', ''),
-            ('FACE', 'Face', ''),
-            ('VOLUME', 'Volume', ''),
-            ('EDGE_MIDPOINT', 'Midpoint', ''),
-            ('EDGE_PERPENDICULAR', 'Perpendicular', ''),
+            ("INCREMENT", "Increment", ""),
+            ("GRID", "Grid", ""),
+            ("VERTEX", "Vertex", ""),
+            ("EDGE", "Edge", ""),
+            ("FACE", "Face", ""),
+            ("VOLUME", "Volume", ""),
+            ("EDGE_MIDPOINT", "Midpoint", ""),
+            ("EDGE_PERPENDICULAR", "Perpendicular", ""),
+            ("FACE_PROJECT", "Face Project", "")
         ]
     )
 
@@ -146,14 +151,19 @@ class PIE_OP_3DSnap(Operator):
 
     def execute(self, context):
         settings = context.tool_settings
+
+        if self.type == "FACE_PROJECT":
+            settings.snap_elements_individual = {self.type}
+            return {"FINISHED"}
+
         if self.toggle:
             settings.snap_elements ^= {self.type}
         else:
             settings.snap_elements = {self.type}
         
-        if self.type == 'INCREMENT':
+        if self.type == "INCREMENT":
             settings.use_snap_grid_absolute = False
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 class PIE_OP_2DSnap(Operator):
     bl_idname = "morph.snap2d"
@@ -167,9 +177,9 @@ class PIE_OP_2DSnap(Operator):
     type : EnumProperty(
         name="Type",
         items=[
-            ('INCREMENT', 'Increment', ''),
-            ('GRID', 'Grid', ''),
-            ('VERTEX', 'Vertex', ''),
+            ("INCREMENT", "Increment", ""),
+            ("GRID", "Grid", ""),
+            ("VERTEX", "Vertex", ""),
         ]
     )
 
@@ -185,7 +195,7 @@ class PIE_OP_2DSnap(Operator):
             settings.snap_uv_element = {self.type}
         
 
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 
 class PIE_OT_2DCorner(bpy.types.Operator):
@@ -194,8 +204,8 @@ class PIE_OT_2DCorner(bpy.types.Operator):
     bl_description = "Snap UVs to pixel corners. Overrites other snap settings"
     
     def execute(self, context):
-        set_pixel_snap_mode('CORNER')
-        return {'FINISHED'}
+        set_pixel_snap_mode("CORNER")
+        return {"FINISHED"}
 
 class PIE_OT_2DCenter(bpy.types.Operator):
     bl_idname = "snap2d.center"
@@ -203,8 +213,8 @@ class PIE_OT_2DCenter(bpy.types.Operator):
     bl_description = "Snap UVs to pixel centers. Overrites other snap settings" 
     
     def execute(self, context):
-        set_pixel_snap_mode('CENTER')
-        return {'FINISHED'}
+        set_pixel_snap_mode("CENTER")
+        return {"FINISHED"}
 
 class PIE_OT_2DDisabled(bpy.types.Operator):
     bl_idname = "snap2d.disabled"
@@ -212,8 +222,8 @@ class PIE_OT_2DDisabled(bpy.types.Operator):
     bl_description = "Disable snapping UVs to pixels"
     
     def execute(self, context):
-        set_pixel_snap_mode('DISABLED')
-        return {'FINISHED'}
+        set_pixel_snap_mode("DISABLED")
+        return {"FINISHED"}
 
 class PIE_OT_2DFlipX(bpy.types.Operator):
     bl_idname = "snap2d.flip_x"
@@ -222,7 +232,7 @@ class PIE_OT_2DFlipX(bpy.types.Operator):
     
     def execute(self, context):
         bpy.ops.transform.mirror(constraint_axis=(True, False, False))
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 class PIE_OT_2DFlipY(bpy.types.Operator):
     bl_idname = "snap2d.flip_y"
@@ -231,7 +241,7 @@ class PIE_OT_2DFlipY(bpy.types.Operator):
     
     def execute(self, context):
         bpy.ops.transform.mirror(constraint_axis=(False, True, False))
-        return {'FINISHED'}
+        return {"FINISHED"}
 
 
 
@@ -256,13 +266,13 @@ def register():
 
     # wm = bpy.context.window_manager
     # if wm.keyconfigs.addon:
-    #     km = wm.keyconfigs.addon.keymaps.new(name='3D View Generic', space_type='VIEW_3D')
-    #     kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'CLICK_DRAG')
+    #     km = wm.keyconfigs.addon.keymaps.new(name="3D View Generic", space_type="VIEW_3D")
+    #     kmi = km.keymap_items.new("wm.call_menu_pie", "S", "CLICK_DRAG")
     #     kmi.properties.name = "PIE_MT_3DSnap"
     #     addon_keymaps.append((km, kmi))
         
-    #     km = wm.keyconfigs.addon.keymaps.new(name='UV Editor')
-    #     kmi = km.keymap_items.new('wm.call_menu_pie', 'S', 'CLICK_DRAG')
+    #     km = wm.keyconfigs.addon.keymaps.new(name="UV Editor")
+    #     kmi = km.keymap_items.new("wm.call_menu_pie", "S", "CLICK_DRAG")
     #     kmi.properties.name = "PIE_MT_2DSnap"
     #     addon_keymaps.append((km, kmi))
         
