@@ -22,7 +22,7 @@ bl_info = {
     "name": "Pie_Workspaces",
     "description": "Workspace Pie Menu",
     "author": "Morphin",
-    "version": (0, 0, 1),
+    "version": (0, 0, 2),
     "blender": (2, 90, 0),
     "loacation": "PIE_MT_workspaces",
     "warning": "",

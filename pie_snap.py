@@ -21,7 +21,7 @@ bl_info = {
     "description": "Snap Pie Menu",
     "author": "Morphin",
     "blender": (2, 90, 0),
-    "version": (0, 0, 2),
+    "version": (0, 1, 0),
     "location": "PIE_MT_2DSnap, PIE_MT_3DSnap",
     "warning": "",
     "doc_url": "",

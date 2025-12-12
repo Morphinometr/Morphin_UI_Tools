@@ -34,7 +34,7 @@ from bpy.types import (
 bl_info = {
     "name": "Morphin UI Tools",
     "author": "Morphin",
-    "version": (0, 0, 3),
+    "version": (0, 0, 4),
     "blender": (2, 90, 0),
     "description": "UI",
     #"location": "Addons Preferences",
