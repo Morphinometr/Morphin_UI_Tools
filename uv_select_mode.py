@@ -64,7 +64,9 @@ class VIEW2D_OT_uv_select_mode(bpy.types.Operator):
         return True
         
     def execute(self, context):
-        bpy.ops.mesh.select_mode(use_extend=self.extend, use_expand=self.expand, type=self.type, action='TOGGLE')
+        if context.tool_settings.use_uv_select_sync:
+            bpy.ops.mesh.select_mode(use_extend=self.extend, use_expand=self.expand, type=self.type, action='TOGGLE')
+        
         if self.type == "VERT":
             bpy.ops.uv.select_mode(type="VERTEX")
         else:
