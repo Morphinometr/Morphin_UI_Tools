@@ -20,7 +20,7 @@ bl_info = {
     "name": "UV Select Mode",
     "description": "Separete select island mode",
     "author": "Morphin",
-    "version": (0, 0, 1),
+    "version": (0, 0, 2),
     "blender": (5, 0, 0),
     "loacation": "morph.uv_select_mode",
     "warning": "",
